@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "784998292855",
+    "project_id": "preapp-1158e",
+    "storage_bucket": "preapp-1158e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784998292855:android:f42c52e92876204b92d572",
+        "android_client_info": {
+          "package_name": "com.example.plzlogin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQZHjbzzIqUDZiazdylhbViUCtw4Y92Hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
