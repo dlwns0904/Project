@@ -1,5 +1,6 @@
 package com.example.plzlogin
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.plzlogin.databinding.ActivityMenuBinding
@@ -25,9 +26,10 @@ class TeamMenuActivity : AppCompatActivity() {
 
 
         // 채팅 눌렀을 때
-        // 추가해줘
+        // 추가해줘 >> 완료
         binding.btnChat.setOnClickListener {
-
+            val intent = Intent(this,ChatActivity::class.java)
+            startActivity(intent)
         }
 
 
