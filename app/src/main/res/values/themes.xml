@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.Plzlogin" parent="Base.Theme.Plzlogin" />
+    <style name="Theme.Plzlogin.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Plzlogin.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Plzlogin.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

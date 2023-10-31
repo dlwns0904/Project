@@ -3,8 +3,6 @@ package com.example.plzlogin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import com.example.plzlogin.databinding.ActivityMainBinding
 import com.example.plzlogin.databinding.ActivityMenuBinding
 
 
@@ -20,6 +18,14 @@ class menu : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 그리고 기존 텍스트뷰 여러개를 일단 빼고 카드뷰로 변경했고 방 갯수가 많아지면 스크롤이 되는지는 기능 구현하고 보면 될 것 같아
+        // Mycalender 버튼 추가했어 누르면 내 일정을 한눈에 볼 수 있는 화면이 나와
+        binding.btnMycalendar.setOnClickListener{
+            val intent = Intent(this, MyCalendarActivity::class.java)
+            startActivity(intent)
+        }
+
 
         // 일단 팀 만들었다고 가정하고 해보자
         // CreateFrag에서 팀 이름 가져와야하는 거 추가해야해

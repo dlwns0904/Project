@@ -19,6 +19,12 @@
             android:name=".TimeSelect"
             android:exported="false" />
         <activity
+            android:name=".MyCalendarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".TeamMenuActivity"
             android:exported="false" />
         <activity
