@@ -1,7 +1,9 @@
 package com.example.plzlogin
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.CalendarView
 import com.example.plzlogin.databinding.ActivityMenuBinding
 import com.example.plzlogin.databinding.ActivityTeamMenuBinding
 
@@ -34,7 +36,19 @@ class TeamMenuActivity : AppCompatActivity() {
         // 게시판 눌렀을 때
         // 추가해줘
         binding.btnBoard.setOnClickListener {
+            val intent: Intent = Intent(this@TeamMenuActivity,Vote::class.java)
+            startActivity(intent)
+        }
 
+        //날짜 선택
+        var cal : CalendarView = findViewById(R.id.Cal)
+        cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            binding.CalTxt.text = "시간 선택"
+        }
+        //시간 선택
+        binding.CalTxt.setOnClickListener {
+            val intent : Intent = Intent(this@TeamMenuActivity,TimeSelect::class.java)
+            startActivity(intent)
         }
     }
 }
