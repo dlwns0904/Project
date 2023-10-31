@@ -15,8 +15,15 @@
             android:id="@+id/Team1"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:textSize="40dp"/>
+            android:textSize="40dp"
+            android:textStyle="bold"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black">
 
+        </View>
         <TextView
             android:id="@+id/Team2"
             android:layout_width="match_parent"
