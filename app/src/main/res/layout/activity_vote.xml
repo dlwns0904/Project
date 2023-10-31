@@ -7,6 +7,15 @@
     tools:context=".Vote">
 
     <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="투표1"
+        android:textSize="25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Vote" />
+
+    <TextView
         android:id="@+id/Vote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
