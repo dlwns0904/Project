@@ -69,6 +69,7 @@ class CreateFrag : Fragment() {
     }
 
 
+    // 팀 생성
     private fun CreateTeam(TeamCode: String) {
 
         val TeamName = binding.edtTeam.text.toString().trim()
