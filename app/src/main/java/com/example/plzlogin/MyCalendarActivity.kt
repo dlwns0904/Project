@@ -16,20 +16,11 @@ class MyCalendarActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
-
-        // 여기는 왜 ViewbyId로 했는지? binding 안걸고?
-
-        val calendarView = findViewById<CalendarView>(R.id.Mycalendar)
-
-        calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            // 선택한 날짜의 년, 월, 일을 처리
+        binding.Mycalendar.setOnDateChangeListener{ view, year, month, dayOfMonth ->
             val selectedDate = "${year}년 ${month + 1}월 ${dayOfMonth}일"
-
-            // TextView에 날짜 표시
-            val textView = findViewById<TextView>(R.id.tv_day)
-            textView.text = selectedDate
+            binding.tvDay.text = selectedDate // TextView에 날짜 표시
         }
+
 
         // 돌아가기 임시로
         binding.btnBack.setOnClickListener {
