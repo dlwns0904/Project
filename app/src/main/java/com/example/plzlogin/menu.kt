@@ -22,7 +22,7 @@ class menu : AppCompatActivity() {
         // 그리고 기존 텍스트뷰 여러개를 일단 빼고 카드뷰로 변경했고 방 갯수가 많아지면 스크롤이 되는지는 기능 구현하고 보면 될 것 같아
 
         // Mycalender 버튼 추가했어 누르면 내 일정을 한눈에 볼 수 있는 화면이 나와
-        binding.btnMycalender.setOnClickListener{
+        binding.btnMycalendar.setOnClickListener{
             val intent = Intent(this, MyCalendarActivity::class.java)
             startActivity(intent)
         }
