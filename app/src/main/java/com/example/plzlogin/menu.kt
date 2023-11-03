@@ -1,11 +1,18 @@
 package com.example.plzlogin
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plzlogin.databinding.ActivityMenuBinding
-
-
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 
 
 class menu : AppCompatActivity() {
@@ -13,11 +20,54 @@ class menu : AppCompatActivity() {
 
 
     lateinit var binding : ActivityMenuBinding
+    lateinit var adapter : TeamApdater
+
+    private lateinit var mAuth : FirebaseAuth
+    private lateinit var mDbref : DatabaseReference
+
+
+    private lateinit var TeamList : ArrayList<Team> // 요거 바꿔야 하고
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        mAuth = Firebase.auth
+
+        mDbref = Firebase.database.reference
+
+        // 리스트 초기화
+        // 리스트 초기화 하는 것을 없애봄
+        TeamList = ArrayList()
+
+        adapter = TeamApdater(this, TeamList)
+
+        binding.recTeam.layoutManager = LinearLayoutManager(this)
+        binding.recTeam.adapter = adapter
+
+        // 요기도 수정
+        // USER의 정보를 가지고 오겠다
+        mDbref.child("USER").child(mAuth.currentUser?.uid!!).addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                TeamList.clear()
+                for (postSnapshot in snapshot.children){
+
+                    val TeamName = postSnapshot.getValue(Team::class.java)
+                    TeamList.add(TeamName!!)
+                }
+                adapter.notifyDataSetChanged()
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+
+        })
+
 
         // 그리고 기존 텍스트뷰 여러개를 일단 빼고 카드뷰로 변경했고 방 갯수가 많아지면 스크롤이 되는지는 기능 구현하고 보면 될 것 같아
 
@@ -37,7 +87,7 @@ class menu : AppCompatActivity() {
         binding.btnCreate.setOnClickListener {
 
             goFrag(0)
-            binding.Team1.text = "FirstTeam"
+            /*binding.Team1.text = "FirstTeam"*/
         }
 
         // 팀 참가 누를 때
@@ -48,10 +98,10 @@ class menu : AppCompatActivity() {
 
 
         // 일단 임시로 팀 눌렀을 때 팀 메뉴로 가는거 설정
-        binding.Team1.setOnClickListener {
+        /*binding.Team1.setOnClickListener {
             val intent : Intent = Intent(this@menu,TeamMenuActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
 
     }

@@ -1,14 +1,11 @@
 package com.example.plzlogin
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.example.plzlogin.databinding.FragmentCreateBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -18,7 +15,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import kotlin.random.Random
 
 
 class CreateFrag : Fragment() {
@@ -53,6 +49,7 @@ class CreateFrag : Fragment() {
         // 팀생성하기 누르면
         binding.btnTeamcreate.setOnClickListener {
             CreateTeam(Teamcode)
+            AddTeam(Teamcode)
 
 
             // 다시 메뉴로 돌아가기
@@ -74,10 +71,15 @@ class CreateFrag : Fragment() {
 
         val TeamName = binding.edtTeam.text.toString().trim()
 
-        val TeamRef = mDbref.child("Team").child(TeamCode)
+        var TeamRef = mDbref.child("Team").child(TeamCode)
 
         TeamRef.setValue(TeamCode)
         TeamRef.child("TeamName").setValue(TeamName)
+
+        // Uesr에 새로운 uid 넣고 팀네임
+        // 아니지 팀네임 말고 다른 걸 해야하나
+        // 일단 팀코드 넣고 한번 해볼까
+
 
         // DB에서 user에 저장된 name을 가져와
         val UsernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
@@ -94,6 +96,15 @@ class CreateFrag : Fragment() {
             }
         })
     }
+
+    // 내 uid에 팀 코드랑 팀이름 추가
+    private fun AddTeam(TeamCode: String){
+        val TeamName = binding.edtTeam.text.toString().trim()
+        val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(TeamCode)
+        /*val newTeamRef = TeamRef.push()*/
+        TeamRef.setValue(Team(TeamName,TeamCode))
+    }
+
 
     data class User(
         var name : String?,

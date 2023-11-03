@@ -8,7 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="219dp">
 
         <EditText
             android:id="@+id/edt_Teamcode"
@@ -17,9 +17,9 @@
             android:ems="10"
             android:hint="코드를 입력하세요"
             android:inputType="text"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_Join"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.39"
+            app:layout_constraintVertical_bias="0.195"
             tools:layout_editor_absoluteX="57dp" />
 
         <Button
