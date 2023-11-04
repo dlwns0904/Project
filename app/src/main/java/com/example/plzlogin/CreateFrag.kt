@@ -71,7 +71,7 @@ class CreateFrag : Fragment() {
 
         val TeamName = binding.edtTeam.text.toString().trim()
 
-        var TeamRef = mDbref.child("Team").child(TeamCode)
+        val TeamRef = mDbref.child("Team").child(TeamCode)
 
         TeamRef.setValue(TeamCode)
         TeamRef.child("TeamName").setValue(TeamName)
