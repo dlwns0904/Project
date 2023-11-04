@@ -39,7 +39,6 @@ class menu : AppCompatActivity() {
         mDbref = Firebase.database.reference
 
         // 리스트 초기화
-        // 리스트 초기화 하는 것을 없애봄
         TeamList = ArrayList()
 
         adapter = TeamApdater(this, TeamList)

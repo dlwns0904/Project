@@ -56,7 +56,7 @@ class JoinFrag : Fragment() {
 
     // 입력한 팀 코드가 DB에 있으면 가입하는 함수를 구현해야해
     private fun Join( TeamCode : String){
-        // 원래는 var인데 val로 바꿈
+
         val TeamRef = mDbref.child("Team").child(TeamCode)
 
         val UsernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
@@ -85,6 +85,7 @@ class JoinFrag : Fragment() {
         TeamRef.addListenerForSingleValueEvent( object : ValueEventListener{override fun onDataChange(dataSnapshot: DataSnapshot) {
             val TeamName = dataSnapshot.value as String?
             val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(TeamCode)
+            // 팀 네임 , 팀 코드 DB에 저장
             TeamRef.setValue(Team(TeamName,TeamCode))
         }
             override fun onCancelled(databaseError: DatabaseError) {

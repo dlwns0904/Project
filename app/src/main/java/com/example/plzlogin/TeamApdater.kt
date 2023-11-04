@@ -46,9 +46,10 @@ class TeamApdater (private val context : Context, private val Teamlist : ArrayLi
 
 
 
-            // 팀 이름을 넘겨줘 팀 메뉴 액티비티로
+            // 팀 이름이랑 팀네임 넘겨주기 을 넘겨줘 팀 메뉴 액티비티로
             // 팀 메뉴는 성훈이가 해줘
             intent.putExtra("TeamName",Teamname.teamName)
+            intent.putExtra("TeamCode",Teamname.teamCode)
             context.startActivity(intent)
 
         }
