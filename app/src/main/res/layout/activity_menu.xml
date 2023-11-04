@@ -11,14 +11,10 @@
         android:layout_width="345dp"
         android:layout_height="213dp"
         android:layout_margin="50dp"
-        android:layout_marginBottom="12dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/btn_create"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_create"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rec_Team"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintStart_toStartOf="@+id/rec_Team">
 
     </LinearLayout>
 
@@ -62,7 +58,7 @@
         android:id="@+id/rec_Team"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="300dp"
+        android:layout_marginBottom="250dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="31dp" />
 
