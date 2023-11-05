@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
         // intent에 들어갈 것 -> 현재와 이동할 액티비티
 
 
-        binding.btnSingup.setOnClickListener {
+        binding.btnSignup.setOnClickListener {
             val intent : Intent = Intent(this@LoginActivity, signupActivity::class.java)
             startActivity(intent)
             // signup 액티비티로 이동한다
@@ -62,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     // 실패?
                     Toast.makeText(this,"로그인이 실패하였습니다. 다시 시도해주세요",Toast.LENGTH_SHORT).show()
-                    /*Log.d("Loing","Error :  ${task.exception}")*/
+                    /* Log.d("Loing","Error :  ${task.exception}") : 디버깅 목적으로 사용, 로그캣에 표시해줌 */
 
                 }
             }

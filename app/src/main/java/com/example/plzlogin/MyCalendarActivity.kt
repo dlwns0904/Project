@@ -17,8 +17,8 @@ class MyCalendarActivity : AppCompatActivity() {
 
 
         binding.Mycalendar.setOnDateChangeListener{ view, year, month, dayOfMonth ->
-            val selectedDate = "${year}년 ${month + 1}월 ${dayOfMonth}일"
-            binding.tvDay.text = selectedDate // TextView에 날짜 표시
+            // val selectedDate = "${year}년 ${month + 1}월 ${dayOfMonth}일" // 굳이 var ?
+            binding.tvDay.text = "${year}년 ${month + 1}월 ${dayOfMonth}일" // TextView에 날짜 표시
         }
 
 

@@ -13,7 +13,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar" />
+        <include
+            android:id="@+id/includeToolbar"
+            layout="@layout/toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_chat"
@@ -22,12 +24,6 @@
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:fitsSystemWindows="true" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
@@ -61,4 +57,13 @@
                 android:text="전송" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:fitsSystemWindows="true"
+        app:menu="@menu/drawer_menu"/>
+
 </androidx.drawerlayout.widget.DrawerLayout>
