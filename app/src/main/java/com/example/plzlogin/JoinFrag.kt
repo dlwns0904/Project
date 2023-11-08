@@ -36,16 +36,33 @@ class JoinFrag : Fragment() {
 
         // 참가 버튼 눌렀을 때
         binding.btnJoin.setOnClickListener {
-
-            // 입력한 팀 코드
+                        // 입력한 팀 코드
             val TeamCode = binding.edtTeamcode.text.toString().trim()
-            Join(TeamCode)
-            AddTeam(TeamCode)
+
+            // DB에 일단 팀 코드 있는지 없는지 확인 있으면 함수 실행 없으면 메세지
+
+            val TeamRef = mDbref.child("Team")
+            TeamRef.child(TeamCode).get().addOnCompleteListener { task ->
+                if (task.isSuccessful){
+                    val dataSnapshot = task.result
+                    // 데이터 있으면 팀 참가해주고
+                    if (dataSnapshot.exists())
+                    {
+                        Join(TeamCode)
+                        AddTeam(TeamCode)
+                    }
+                    else{
+                        /*Toast.makeText(requireActivity(),"존재하지 않는 코드입니다",Toast.LENGTH_SHORT).show()*/
+                    }
+                }
+            }
+
+            /*Join(TeamCode)
+            AddTeam(TeamCode)*/
 
 
-
-            // 다시 menu로 돌아가는거
             val Frag = requireActivity().supportFragmentManager.beginTransaction()
+            // 다시 menu로 돌아가는거
             Frag.remove(this)
             Frag.commit()
         }
