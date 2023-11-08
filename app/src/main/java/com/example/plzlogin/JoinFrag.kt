@@ -40,19 +40,21 @@ class JoinFrag : Fragment() {
             val TeamCode = binding.edtTeamcode.text.toString().trim()
 
             // DB에 일단 팀 코드 있는지 없는지 확인 있으면 함수 실행 없으면 메세지
-
-            val TeamRef = mDbref.child("Team")
-            TeamRef.child(TeamCode).get().addOnCompleteListener { task ->
-                if (task.isSuccessful){
-                    val dataSnapshot = task.result
-                    // 데이터 있으면 팀 참가해주고
-                    if (dataSnapshot.exists())
-                    {
-                        Join(TeamCode)
-                        AddTeam(TeamCode)
-                    }
-                    else{
-                        /*Toast.makeText(requireActivity(),"존재하지 않는 코드입니다",Toast.LENGTH_SHORT).show()*/
+            if (TeamCode.length != 6){
+                Toast.makeText(requireContext(),"6자리 숫자를 입력해주세요",Toast.LENGTH_SHORT).show()
+            }
+            else{
+                val TeamRef = mDbref.child("Team")
+                TeamRef.child(TeamCode).get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val dataSnapshot = task.result
+                        // 데이터 있으면 팀 참가해주고
+                        if (dataSnapshot.exists()) {
+                            Join(TeamCode)
+                            AddTeam(TeamCode)
+                        } else {
+                            /*Toast.makeText(requireContext(),"존재하지 않는 코드입니다",Toast.LENGTH_SHORT).show()*/
+                        }
                     }
                 }
             }
