@@ -58,10 +58,6 @@ class CreateFrag : Fragment() {
             Frag.commit()
 
         }
-
-
-
-
         return view
     }
 

@@ -2,12 +2,9 @@ package com.example.plzlogin
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plzlogin.databinding.ActivityMenuBinding
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -29,7 +26,7 @@ class menu : AppCompatActivity() {
     private lateinit var mDbref : DatabaseReference
 
 
-    private lateinit var TeamList : ArrayList<Team> // 요거 바꿔야 하고
+    private lateinit var TeamList : ArrayList<Team>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

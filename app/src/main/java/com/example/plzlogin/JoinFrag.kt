@@ -53,6 +53,7 @@ class JoinFrag : Fragment() {
                             Join(TeamCode)
                             AddTeam(TeamCode)
                         } else {
+                            // 이거 왜 안되는지?
                             /*Toast.makeText(requireContext(),"존재하지 않는 코드입니다",Toast.LENGTH_SHORT).show()*/
                         }
                     }
