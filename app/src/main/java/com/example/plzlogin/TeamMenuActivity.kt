@@ -15,6 +15,7 @@ class TeamMenuActivity : AppCompatActivity() {
     // 채팅 눌렀을 때, 게시판 눌렀을 때 화면 어떻게 나올지
     // 기능 구현은 나중에 하고 일단 화면 구성만
 
+
     lateinit var binding : ActivityTeamMenuBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +30,6 @@ class TeamMenuActivity : AppCompatActivity() {
 
 
 
-
         // 채팅 눌렀을 때
         // 추가해줘 >> 완료
         binding.btnChat.setOnClickListener {
@@ -38,7 +38,7 @@ class TeamMenuActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
+        binding.TeamName.text = teamName
         // 게시판 눌렀을 때
         // 추가해줘
         binding.btnBoard.setOnClickListener {
