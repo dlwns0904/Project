@@ -23,6 +23,10 @@ class TeamMenuActivity : AppCompatActivity() {
         binding = ActivityTeamMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val intent = intent
+        val teamName = intent.getStringExtra("TeamName")
+        val teamCode = intent.getStringExtra("TeamCode")
+
 
 
 
@@ -30,6 +34,7 @@ class TeamMenuActivity : AppCompatActivity() {
         // 추가해줘 >> 완료
         binding.btnChat.setOnClickListener {
             val intent = Intent(this,ChatActivity::class.java)
+            intent.putExtra("TeamName", teamName)
             startActivity(intent)
         }
 

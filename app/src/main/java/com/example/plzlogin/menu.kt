@@ -2,9 +2,12 @@ package com.example.plzlogin
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plzlogin.databinding.ActivityMenuBinding
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -46,15 +49,16 @@ class menu : AppCompatActivity() {
         binding.recTeam.layoutManager = LinearLayoutManager(this)
         binding.recTeam.adapter = adapter
 
+
         // 요기도 수정
         // USER의 정보를 가지고 오겠다
         mDbref.child("USER").child(mAuth.currentUser?.uid!!).addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 TeamList.clear()
                 for (postSnapshot in snapshot.children){
-
                     val TeamName = postSnapshot.getValue(Team::class.java)
                     TeamList.add(TeamName!!)
+
                 }
                 adapter.notifyDataSetChanged()
 
@@ -68,9 +72,6 @@ class menu : AppCompatActivity() {
         })
 
 
-        // 그리고 기존 텍스트뷰 여러개를 일단 빼고 카드뷰로 변경했고 방 갯수가 많아지면 스크롤이 되는지는 기능 구현하고 보면 될 것 같아
-
-        // Mycalender 버튼 추가했어 누르면 내 일정을 한눈에 볼 수 있는 화면이 나와
         binding.btnMycalendar.setOnClickListener{
             val intent = Intent(this, MyCalendarActivity::class.java)
             startActivity(intent)

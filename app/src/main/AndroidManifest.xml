@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Plzlogin"
         tools:targetApi="31">
         <activity
+            android:name=".UserListActivity"
+            android:exported="false" />
+        <activity
             android:name=".Vote"
             android:exported="false" />
         <activity
@@ -41,12 +44,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-
-            <!-- MainActivity에 대한 다른 설정 -->
         </activity>
     </application>
 
