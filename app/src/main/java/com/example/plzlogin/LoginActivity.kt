@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.example.plzlogin.databinding.ActivityLoginBinding
 import com.google.firebase.Firebase
@@ -24,6 +26,9 @@ class LoginActivity : AppCompatActivity() {
         // 인증 초기화
         mAuth = Firebase.auth
 
+
+
+
         // 로그인 버튼
         binding.btnLogin.setOnClickListener {
             val id = binding.edtId.text.toString().trim() // 트림붙여서 한번 해봐
@@ -32,7 +37,16 @@ class LoginActivity : AppCompatActivity() {
             login(id,password)
         }
 
-
+        binding.edtPassword.setOnEditorActionListener { _, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                (event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER)
+            ) {
+                // 엔터 키가 눌렸을 때 로그인 버튼 클릭 이벤트 발생
+                binding.btnLogin.performClick()
+                return@setOnEditorActionListener true
+            }
+            false
+        }
 
         // 회원가입
         // 액티비티 이동은 intent로 만들어

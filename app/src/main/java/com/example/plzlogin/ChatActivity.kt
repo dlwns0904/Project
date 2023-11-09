@@ -40,7 +40,6 @@ class ChatActivity : AppCompatActivity() {
 
         val intent = intent
         val teamName = intent.getStringExtra("TeamName")
-        Toast.makeText(this@ChatActivity,teamName,Toast.LENGTH_SHORT).show()
 
 
         val headerView = binding.navView.getHeaderView(0)
@@ -57,8 +56,7 @@ class ChatActivity : AppCompatActivity() {
                 if (dataSnapshot.exists()) {
                     val name = dataSnapshot.child("name").getValue(String::class.java)
                     userNameTextView.text = name
-                    //val myMenuItem = findViewById<View>(R.id.nav_userName)
-                    //myMenuItem.text = name
+
                 }
             }
 
@@ -72,28 +70,6 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
         supportActionBar?.title = teamName
 
-        /*mDbref.child("Team").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (teamSnapshot in dataSnapshot.children) {
-                        val teamCode = teamSnapshot.key // 팀 코드 (랜덤 숫자)
-                        val teamName = teamSnapshot.child("TeamName").getValue(String::class.java)
-
-                        if (teamCode != null && uid != null) {
-                            // 이제 teamCode와 userId를 사용하여 해당 팀 및 유저의 정보를 가져올 수 있습니다.
-                            val userSnapshot = teamSnapshot.child(uid)
-                            val userName = userSnapshot.child("name").getValue(String::class.java)
-
-
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(this@ChatActivity,"fail",Toast.LENGTH_SHORT).show()
-            }
-        })*/
 
 
 
