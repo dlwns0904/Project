@@ -55,14 +55,15 @@ class TeamApdater (private val context : Context, private val Teamlist : ArrayLi
 
         // 이동액티비티
         holder.itemView.setOnClickListener {
+            notifyDataSetChanged()
             val intent = Intent(context,TeamMenuActivity::class.java)
 
 
 
             // 팀 이름이랑 팀네임 넘겨주기 을 넘겨줘 팀 메뉴 액티비티로
             // 팀 메뉴는 성훈이가 해줘
-            intent.putExtra("TeamName",TeamCode)
-            intent.putExtra("TeamCode",TeamName)
+            intent.putExtra("TeamName",TeamName)
+            intent.putExtra("TeamCode",TeamCode)
             context.startActivity(intent)
         }
         mAuth = Firebase.auth

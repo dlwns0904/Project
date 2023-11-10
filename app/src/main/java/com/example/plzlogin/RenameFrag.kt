@@ -46,6 +46,7 @@ class RenameFrag : Fragment() {
         // Team - Teamcode - teamName
         binding.btnReName.setOnClickListener {
             val Rename = binding.edtReTeamName.text.toString().trim()
+            // 널 체크
             if (TeamCode != null) {
                 mDbref.child("USER").child(uid).child(TeamCode).child("teamName").setValue(Rename)
                 mDbref.child("Team").child(TeamCode).child("TeamName").setValue(Rename)
