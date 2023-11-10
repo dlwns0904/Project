@@ -47,7 +47,7 @@ class CreateFrag : Fragment() {
         binding.Teamnum.text = Teamcode
 
         // 팀생성하기 누르면
-        binding.btnTeamcreate.setOnClickListener {
+        binding.btnTeamCreate.setOnClickListener {
             CreateTeam(Teamcode)
             AddTeam(Teamcode)
 

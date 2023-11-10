@@ -2,6 +2,7 @@ package com.example.plzlogin
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -74,7 +75,7 @@ class TeamApdater (private val context : Context, private val Teamlist : ArrayLi
         // 삭제 누르면 팀 삭제
         // 이미지 추가 해야해
 
-        holder.btndel.setOnClickListener {
+        holder.btnDel.setOnClickListener {
 
             mDbref.child("USER").child(uid).child(TeamCode).removeValue()
             mDbref.child("Team").child(TeamCode).child(uid).removeValue()
@@ -82,12 +83,32 @@ class TeamApdater (private val context : Context, private val Teamlist : ArrayLi
             notifyDataSetChanged()
             Toast.makeText(context,"팀이 삭제 되었습니다",Toast.LENGTH_SHORT).show()
         }
+
+        // 이름 수정
+        // Frag로 팀코드 보내줘야 함
+        holder.btnRename.setOnClickListener {
+
+            // 숫자를 왜 안가지고 오니?
+            val ReNameFrag : RenameFrag = RenameFrag()
+            val bundle : Bundle = Bundle()
+            bundle.putString("TeamCode",TeamCode)
+
+            ReNameFrag.arguments = bundle
+
+            val frag = (context as menu).supportFragmentManager.beginTransaction()
+            frag.replace(R.id.Menufrag, ReNameFrag).commit()
+
+
+            notifyDataSetChanged()
+            // 토스트 메세지도 추가?ㅅ
+        }
     }
 
     class TeamHolder(private val binding : ListTeamsBinding/*itemView: ListTeamsBinding*/)
         : RecyclerView.ViewHolder(binding.root/*itemView*/){
 
         val TeamnameText : TextView = binding.txtTeamName1
-        val btndel : Button = binding.btnDelete
+        val btnDel : Button = binding.btnDelete
+        val btnRename : Button = binding.btnRename
     }
 }
