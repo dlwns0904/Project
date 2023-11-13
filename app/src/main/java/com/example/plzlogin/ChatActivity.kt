@@ -2,6 +2,8 @@ package com.example.plzlogin
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -10,6 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.plzlogin.databinding.ActivityChatBinding
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -25,39 +28,74 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout // 앞에 뭐 안 붙어도 되는지
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbref: DatabaseReference
-
+    private lateinit var navView: NavigationView
+    private lateinit var teamCode: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        drawerLayout = binding.drawerLayout
+
+
         val toolbar = binding.includeToolbar.toolbar
         val btnMenu = binding.includeToolbar.btnMenu
+        drawerLayout = binding.drawerLayout
+        navView = binding.navView
         mAuth = Firebase.auth
         mDbref = Firebase.database.reference
 
+        val menu: Menu = navView.menu
+        val Users = menu.findItem(R.id.subtitle)?.subMenu
+        // Log.d("slsls", "group2: $group2")
+        // group2에 해당하는 SubMenu를 찾음
+        val currentUserId = mAuth.currentUser?.uid
+
         val intent = intent
         val teamName = intent.getStringExtra("TeamName")
-        Toast.makeText(this@ChatActivity,teamName,Toast.LENGTH_SHORT).show()
+        teamCode = intent.getStringExtra("TeamCode").toString()
 
 
-        val headerView = binding.navView.getHeaderView(0)
+
+        val headerView = navView.getHeaderView(0)
         val userNameTextView = headerView.findViewById<TextView>(R.id.tv_nav_userName)
         val userIdTextView = headerView.findViewById<TextView>(R.id.tv_nav_userEmail)
 
         val user = Firebase.auth.currentUser
         val uid = user!!.uid
-        userIdTextView.text = user!!.email
+        userIdTextView.text = user?.email
+
 
         mDbref.child("user").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val name = dataSnapshot.child("name").getValue(String::class.java)
                     userNameTextView.text = name
-                    //val myMenuItem = findViewById<View>(R.id.nav_userName)
-                    //myMenuItem.text = name
+                    val navUsersItem = Users?.findItem(R.id.nav_Users)
+                    navUsersItem?.title = name
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 실패 처리
+            }
+        })
+
+
+        val teamRef = mDbref.child("Team").child(teamCode)
+        teamRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (userSnapshot in dataSnapshot.children) {
+                    val uid = userSnapshot.key
+                    if (uid != currentUserId) { // 현재 사용자의 uid는 제외
+                        val userName = userSnapshot.child("name").getValue(String::class.java)
+                        userName?.let {
+                            val itemId = View.generateViewId() // 아이템 ID 동적으로 생성
+                            // Log.d("Dldld", "Generated ItemId: $itemId")
+                            val menuItem = Users?.add(Menu.NONE, itemId, Menu.NONE, it)
+                            menuItem?.setIcon(R.drawable.ic_user) // 원하는 아이콘으로 설정
+                        }
+                    }
                 }
             }
 
@@ -71,28 +109,6 @@ class ChatActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
         supportActionBar?.title = teamName
 
-        /*mDbref.child("Team").addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (teamSnapshot in dataSnapshot.children) {
-                        val teamCode = teamSnapshot.key // 팀 코드 (랜덤 숫자)
-                        val teamName = teamSnapshot.child("TeamName").getValue(String::class.java)
-
-                        if (teamCode != null && uid != null) {
-                            // 이제 teamCode와 userId를 사용하여 해당 팀 및 유저의 정보를 가져올 수 있습니다.
-                            val userSnapshot = teamSnapshot.child(uid)
-                            val userName = userSnapshot.child("name").getValue(String::class.java)
-
-
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Toast.makeText(this@ChatActivity,"fail",Toast.LENGTH_SHORT).show()
-            }
-        })*/
 
 
 
@@ -137,3 +153,101 @@ class ChatActivity : AppCompatActivity() {
 
 
 // 검색버튼, 채팅 기능, 카메라&포토 기능, 참여자 리스트, 유저 네임 네비에 띄우기
+/*
+
+
+
+        /*(val teamRef = mDbref.child("Team").child(teamCode)
+        teamRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (userSnapshot in dataSnapshot.children) {
+                    val uid = userSnapshot.key
+                    if (uid != currentUserId) { // 현재 사용자의 uid는 제외
+                        val userName = userSnapshot.child("name").getValue(String::class.java)
+
+                        // 유저 이름이 null이 아니라면 메뉴에 아이템 추가
+                        userName?.let {
+                            val itemId = View.generateViewId() // 아이템 ID 동적으로 생성
+                            val menuItem = group2!!.add(Menu.NONE, itemId, Menu.NONE, it)
+                            menuItem.setIcon(R.drawable.ic_user) // 원하는 아이콘으로 설정
+                        }
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 실패 처리
+            }
+        })*/
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.drawer_menu, menu)
+
+        // MenuItem을 가져옴
+        val menuItem = menu.findItem(R.id.rec_Menu)
+
+        // ActionLayout을 가져옴
+        val actionView = MenuItemCompat.getActionView(menuItem)
+
+        // ActionLayout 안에 있는 RecyclerView를 찾음
+        val recyclerView: RecyclerView = actionView.findViewById(R.id.recyclerView)
+
+        val teamRef = mDbref.child("Team").child(teamCode)
+        userList = ArrayList()
+
+        teamRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                userList.clear()
+
+                for (uidSnapshot in dataSnapshot.children) {
+                    val uid = uidSnapshot.key
+                    uid?.let {
+                        val userRef = teamRef.child(it)
+                        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(userSnapshot: DataSnapshot) {
+                                val name = userSnapshot.child("name").getValue(User::class.java)
+                                name?.let {
+                                    userList.add(name)
+
+                                    if (userList.size == dataSnapshot.childrenCount.toInt()) {
+                                        // 기존 어댑터 업데이트
+                                        userAdapter.notifyDataSetChanged()
+                                    }
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                // 실패 처리
+                            }
+                        })
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // 실패 처리
+            }
+        })
+
+        return true
+    }*/
+
+}
+
+
+// 검색버튼, 채팅 기능, 카메라&포토 기능, 참여자 리스트, 유저 네임 네비에 띄우기
+
+ */

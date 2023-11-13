@@ -2,12 +2,9 @@ package com.example.plzlogin
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plzlogin.databinding.ActivityMenuBinding
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -29,7 +26,7 @@ class menu : AppCompatActivity() {
     private lateinit var mDbref : DatabaseReference
 
 
-    private lateinit var TeamList : ArrayList<Team> // 요거 바꿔야 하고
+    private lateinit var TeamList : ArrayList<Team>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,17 +55,11 @@ class menu : AppCompatActivity() {
                 for (postSnapshot in snapshot.children){
                     val TeamName = postSnapshot.getValue(Team::class.java)
                     TeamList.add(TeamName!!)
-
                 }
                 adapter.notifyDataSetChanged()
-
             }
-
             override fun onCancelled(error: DatabaseError) {
-
             }
-
-
         })
 
 
@@ -81,29 +72,15 @@ class menu : AppCompatActivity() {
         // 일단 팀 만들었다고 가정하고 해보자
         // CreateFrag에서 팀 이름 가져와야하는 거 추가해야해
 
-
-
         // 팀 생성 누를 때
         binding.btnCreate.setOnClickListener {
-
             goFrag(0)
-            /*binding.Team1.text = "FirstTeam"*/
         }
 
         // 팀 참가 누를 때
         binding.btnJoin.setOnClickListener {
-
             goFrag(1)
         }
-
-
-        // 일단 임시로 팀 눌렀을 때 팀 메뉴로 가는거 설정
-        /*binding.Team1.setOnClickListener {
-            val intent : Intent = Intent(this@menu,TeamMenuActivity::class.java)
-            startActivity(intent)
-        }*/
-
-
     }
 
     // 프래그먼트 전환하기
@@ -111,13 +88,11 @@ class menu : AppCompatActivity() {
         val frag = supportFragmentManager.beginTransaction()
 
         when (num){
-
             // 생성누르면
             0 -> frag.replace(R.id.Menufrag, CreateFrag()).commit()
 
             // 참여누르면
             1 -> frag.replace(R.id.Menufrag, JoinFrag()).commit()
         }
-
     }
 }
