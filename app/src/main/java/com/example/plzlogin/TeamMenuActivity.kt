@@ -35,6 +35,7 @@ class TeamMenuActivity : AppCompatActivity() {
         binding.btnChat.setOnClickListener {
             val intent = Intent(this,ChatActivity::class.java)
             intent.putExtra("TeamName", teamName)
+            intent.putExtra("TeamCode", teamCode)
             startActivity(intent)
         }
 

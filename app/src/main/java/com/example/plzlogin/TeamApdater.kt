@@ -94,6 +94,7 @@ class TeamApdater (private val context : Context, private val Teamlist : ArrayLi
             val bundle : Bundle = Bundle()
             bundle.putString("TeamCode",TeamCode)
 
+
             ReNameFrag.arguments = bundle
 
             val frag = (context as menu).supportFragmentManager.beginTransaction()
