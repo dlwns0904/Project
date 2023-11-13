@@ -51,6 +51,7 @@ class TeamMenuActivity : AppCompatActivity() {
         cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
             binding.CalTxt.text = "시간 선택"
         }
+
         //시간 선택
         binding.CalTxt.setOnClickListener {
             val intent : Intent = Intent(this@TeamMenuActivity,TimeSelect::class.java)

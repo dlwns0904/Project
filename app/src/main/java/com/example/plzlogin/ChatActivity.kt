@@ -51,7 +51,6 @@ class ChatActivity : AppCompatActivity() {
         val uid = user!!.uid
         userIdTextView.text = user!!.email
 
-
         mDbref.child("user").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
