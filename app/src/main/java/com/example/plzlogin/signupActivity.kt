@@ -33,7 +33,7 @@ class signupActivity : AppCompatActivity() {
         mDbref = Firebase.database.reference
 
         // 버튼
-        binding.btnSingup.setOnClickListener {
+        binding.btnSignup.setOnClickListener {
 
             val name = binding.edtName.text.toString().trim()
             val id = binding.edtId.text.toString().trim()

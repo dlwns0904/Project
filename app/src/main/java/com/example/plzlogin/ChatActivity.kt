@@ -2,7 +2,6 @@ package com.example.plzlogin
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -154,101 +153,3 @@ class ChatActivity : AppCompatActivity() {
 
 
 // 검색버튼, 채팅 기능, 카메라&포토 기능, 참여자 리스트, 유저 네임 네비에 띄우기
-/*
-
-
-
-        /*(val teamRef = mDbref.child("Team").child(teamCode)
-        teamRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (userSnapshot in dataSnapshot.children) {
-                    val uid = userSnapshot.key
-                    if (uid != currentUserId) { // 현재 사용자의 uid는 제외
-                        val userName = userSnapshot.child("name").getValue(String::class.java)
-
-                        // 유저 이름이 null이 아니라면 메뉴에 아이템 추가
-                        userName?.let {
-                            val itemId = View.generateViewId() // 아이템 ID 동적으로 생성
-                            val menuItem = group2!!.add(Menu.NONE, itemId, Menu.NONE, it)
-                            menuItem.setIcon(R.drawable.ic_user) // 원하는 아이콘으로 설정
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 실패 처리
-            }
-        })*/
-
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.drawer_menu, menu)
-
-        // MenuItem을 가져옴
-        val menuItem = menu.findItem(R.id.rec_Menu)
-
-        // ActionLayout을 가져옴
-        val actionView = MenuItemCompat.getActionView(menuItem)
-
-        // ActionLayout 안에 있는 RecyclerView를 찾음
-        val recyclerView: RecyclerView = actionView.findViewById(R.id.recyclerView)
-
-        val teamRef = mDbref.child("Team").child(teamCode)
-        userList = ArrayList()
-
-        teamRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                userList.clear()
-
-                for (uidSnapshot in dataSnapshot.children) {
-                    val uid = uidSnapshot.key
-                    uid?.let {
-                        val userRef = teamRef.child(it)
-                        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(userSnapshot: DataSnapshot) {
-                                val name = userSnapshot.child("name").getValue(User::class.java)
-                                name?.let {
-                                    userList.add(name)
-
-                                    if (userList.size == dataSnapshot.childrenCount.toInt()) {
-                                        // 기존 어댑터 업데이트
-                                        userAdapter.notifyDataSetChanged()
-                                    }
-                                }
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                // 실패 처리
-                            }
-                        })
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 실패 처리
-            }
-        })
-
-        return true
-    }*/
-
-}
-
-
-// 검색버튼, 채팅 기능, 카메라&포토 기능, 참여자 리스트, 유저 네임 네비에 띄우기
-
- */
