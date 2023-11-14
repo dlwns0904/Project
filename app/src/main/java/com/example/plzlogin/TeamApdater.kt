@@ -30,9 +30,7 @@ class TeamApdater (private val context : Context, private val Teamlist : ArrayLi
 
         val holder = TeamHolder(binding)
         return holder
-        /*val view : View = LayoutInflater.from(context).
-        inflate(R.layout.list_teams, parent, false)
-        return TeamHolder(view)*/
+
 
     }
 

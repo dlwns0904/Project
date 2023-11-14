@@ -36,32 +36,36 @@ class JoinFrag : Fragment() {
 
         // 참가 버튼 눌렀을 때
         binding.btnJoin.setOnClickListener {
-                        // 입력한 팀 코드
+            // 입력한 팀 코드
             val TeamCode = binding.edtTeamcode.text.toString().trim()
 
             // DB에 일단 팀 코드 있는지 없는지 확인 있으면 함수 실행 없으면 메세지
             if (TeamCode.length != 6){
                 Toast.makeText(requireContext(),"6자리 숫자를 입력해주세요",Toast.LENGTH_SHORT).show()
             }
+
             else{
+
                 val TeamRef = mDbref.child("Team")
                 TeamRef.child(TeamCode).get().addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+
                         val dataSnapshot = task.result
+
                         // 데이터 있으면 팀 참가해주고
                         if (dataSnapshot.exists()) {
+
                             Join(TeamCode)
                             AddTeam(TeamCode)
+
                         } else {
                             // 이거 왜 안되는지?
                             /*Toast.makeText(requireContext(),"존재하지 않는 코드입니다",Toast.LENGTH_SHORT).show()*/
+
                         }
                     }
                 }
             }
-
-            /*Join(TeamCode)
-            AddTeam(TeamCode)*/
 
 
             val Frag = requireActivity().supportFragmentManager.beginTransaction()
@@ -69,7 +73,6 @@ class JoinFrag : Fragment() {
             Frag.remove(this)
             Frag.commit()
         }
-
         return view
     }
 
@@ -78,8 +81,9 @@ class JoinFrag : Fragment() {
     private fun Join( TeamCode : String){
 
         val TeamRef = mDbref.child("Team").child(TeamCode)
-
+        // 이름 가지고 오기
         val UsernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
+
         UsernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val Username = dataSnapshot.value as String?
@@ -93,16 +97,18 @@ class JoinFrag : Fragment() {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // 데이터베이스에서 데이터를 가져오는 중 오류가 발생한 경우 처리할 내용을 추가
+                // 실패
                 Toast.makeText(requireContext(), "데이터를 가져오는 중 오류 발생", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
     private fun AddTeam(TeamCode: String){
-        // 팀네임을 가져와야 겠지?
+        // 팀 네임을 가져 와야 겠지?
         val TeamRef = mDbref.child("Team").child(TeamCode).child("TeamName")
+
         TeamRef.addListenerForSingleValueEvent( object : ValueEventListener{override fun onDataChange(dataSnapshot: DataSnapshot) {
+
             val TeamName = dataSnapshot.value as String?
             val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(TeamCode)
             // 팀 네임 , 팀 코드 DB에 저장

@@ -41,7 +41,6 @@ class RenameFrag : Fragment() {
         val TeamCode = arguments?.getString("TeamCode")
 
         // 수정누르면 이름 변경
-
         // USER - uid - TeamCode - teamName
         // Team - Teamcode - teamName
         binding.btnReName.setOnClickListener {

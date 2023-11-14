@@ -7,8 +7,8 @@
 
     <androidx.cardview.widget.CardView
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="387dp"
+        android:layout_height="81dp"
         android:layout_margin="10dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="12dp"
@@ -19,18 +19,21 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="97dp">
 
             <TextView
                 android:id="@+id/txt_TeamName1"
                 android:layout_width="300dp"
                 android:layout_height="58dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="43dp"
+                android:backgroundTint="#FFFFFF"
                 android:text="TextView"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:textSize="35dp"
+                android:textSize="40sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -42,17 +45,25 @@
                 android:id="@+id/btn_Delete"
                 android:layout_width="73dp"
                 android:layout_height="36dp"
-                android:text="del"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="#3F51B5"
+                android:text="삭제"
+                android:textSize="13dp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:layout_editor_absoluteY="12dp" />
+                tools:layout_editor_absoluteY="6dp" />
 
             <Button
                 android:id="@+id/btn_Rename"
                 android:layout_width="73dp"
                 android:layout_height="36dp"
-                android:text="Rename"
-                app:layout_constraintEnd_toStartOf="@+id/btn_Delete"
-                tools:layout_editor_absoluteY="12dp" />
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="#3F51B5"
+                android:text="수정"
+                android:textSize="13dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_Delete" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
