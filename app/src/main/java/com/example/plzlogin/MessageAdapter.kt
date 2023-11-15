@@ -34,7 +34,7 @@ class MessageAdapter(private var context: Context, private var messageList: Arra
         } else{ // 받는 데이터
             val viewHolder = holder as ReceiveViewHolder
             viewHolder.receiveMessage.text = currentMessage.message
-            holder.receiverName.text = currentMessage.userName
+            holder.receiverName.text = currentMessage.senderName
         }
     }
 
@@ -44,7 +44,7 @@ class MessageAdapter(private var context: Context, private var messageList: Arra
 
     override fun getItemViewType(position: Int): Int {
         val currentMessage = messageList[position] // 메세지 값
-        return if(FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.currentId)){
+        return if(FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.sendertId)){
             send
         }else{
             receive

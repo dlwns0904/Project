@@ -8,10 +8,11 @@
     android:orientation="vertical"
     tools:context=".ChatActivity">
 
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent" >
 
         <include
             android:id="@+id/includeToolbar"
@@ -20,16 +21,27 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_chat"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@id/divider_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/includeToolbar" />
 
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ConstraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/divider_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#B6B6B6"
+            app:layout_constraintBottom_toTopOf="@id/layout_input"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:id="@+id/layout_input"
@@ -38,6 +50,7 @@
             android:orientation="horizontal"
             android:weightSum="100"
             app:layout_constraintBottom_toBottomOf="parent">
+
 
             <EditText
                 android:id="@+id/edt_message"

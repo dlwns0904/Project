@@ -44,18 +44,22 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         // 초기화
         messageList = ArrayList()
-        val messageAdapter: MessageAdapter = MessageAdapter(this, messageList)
+        val messageAdapter = MessageAdapter(this, messageList)
 
         // recyclerView
         binding.recyclerChat.layoutManager = LinearLayoutManager(this)
         binding.recyclerChat.adapter = messageAdapter
 
+        // 인스턴스 초기화
+        mAuth = Firebase.auth
+        mDbref = Firebase.database.reference
 
-
+        // 이전화면에서 가져오기
+        val intent = intent
+        val teamName = intent.getStringExtra("TeamName")
+        teamCode = intent.getStringExtra("TeamCode").toString()
 
 
 
@@ -63,19 +67,12 @@ class ChatActivity : AppCompatActivity() {
         val btnMenu = binding.includeToolbar.btnMenu
         drawerLayout = binding.drawerLayout
         navView = binding.navView
-        mAuth = Firebase.auth
-        mDbref = Firebase.database.reference
+
 
         val menu: Menu = navView.menu
         val Users = menu.findItem(R.id.subtitle)?.subMenu
         // Log.d("slsls", "group2: $group2")
         // subtitle에 해당하는 SubMenu를 찾음
-
-        val intent = intent
-        val teamName = intent.getStringExtra("TeamName")
-        teamCode = intent.getStringExtra("TeamCode").toString()
-
-
 
 
         val headerView = navView.getHeaderView(0)
@@ -141,19 +138,22 @@ class ChatActivity : AppCompatActivity() {
                 // 그룹 채팅 메시지 전송
                 binding.btnSend.setOnClickListener {
                     val message = binding.edtMessage.text.toString()
-                    val messageObject = Message(message, currentUid, currentUserName)
+                    if (message.trim().isNotEmpty()) { // 공백만 보내기는 안되게
+                        val messageObject = Message(message, currentUid, currentUserName)
 
-                    // 데이터 저장
-                    mDbref.child("Chats").child(groupChatRoom).child("messages").push()
-                        .setValue(messageObject).addOnSuccessListener {
-                        // 저장 성공시
-                        for (memberUid in userList) {
-                            mDbref.child("Chats").child(groupChatRoom).child("user_$memberUid")
-                                .child("messages").push().setValue(messageObject)
-                        }
+                        // 데이터 저장
+                        mDbref.child("Chats").child(groupChatRoom).child("messages").push()
+                            .setValue(messageObject).addOnSuccessListener {
+                                // 저장 성공시
+                                for (memberUid in userList) {
+                                    mDbref.child("Chats").child(groupChatRoom)
+                                        .child("user_$memberUid")
+                                        .child("messages").push().setValue(messageObject)
+                                }
 
+                            }
+                        binding.edtMessage.setText("") // 입력값 초기화
                     }
-                    binding.edtMessage.setText("") // 입력값 초기화
                 }
 
                 // 메세지 가져오기
@@ -174,7 +174,7 @@ class ChatActivity : AppCompatActivity() {
                             // 실패 처리
                         }
 
-                })
+                    })
 
             }
 
