@@ -76,11 +76,6 @@ class CreateFrag : Fragment() {
                 TeamRef.setValue(TeamCode)
                 TeamRef.child("TeamName").setValue(TeamName)
 
-                // Uesr에 새로운 uid 넣고 팀네임
-                // 아니지 팀네임 말고 다른 걸 해야하나
-                // 일단 팀코드 넣고 한번 해볼까
-
-
                 // DB에서 user에 저장된 name을 가져와
                 val UsernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
                 UsernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -91,7 +86,7 @@ class CreateFrag : Fragment() {
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
-                        // 데이터베이스에서 데이터를 가져오는 중 오류가 발생한 경우 처리할 내용을 추가
+                        // 데이터 베이스에서 데이터를 가져오는 중 오류가 발생한 경우 처리할 내용을 추가
                         Toast.makeText(requireContext(), "데이터를 가져오는 중 오류 발생", Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -135,51 +130,3 @@ class CreateFrag : Fragment() {
         return Number
     }
 }
-
-
-
-/*
-class CreateFrag : Fragment() {
-
-    lateinit var binding : FragmentCreateBinding
-    override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val view = inflater.inflate(R.layout.fragment_create, container, false)
-
-        binding = FragmentCreateBinding.inflate(layoutInflater)
-
-        // 팀 이름
-        val Teamname = binding.edtTeam.text.toString().trim()
-
-        // 팀코드는 랜덤한 숫자 6자리로?
-        val Teamcode = Randomnumber()
-
-        // 팀 코드 보여주고
-        binding.Teamnum.setText(Teamcode)
-
-        // 팀생성하기 누르면
-        binding.btnTeamcreate.setOnClickListener{
-            CreateTeam( Teamname , Teamcode)
-        }
-
-    return view
-    }
-
-
-    private fun CreateTeam( Teamname : String, Teamcode : String){
-
-    }
-
-    // 랜덤한 팀 코드 숫자 생성
-    private fun Randomnumber() : String {
-
-        var Number = ""
-        val Range = 0..9
-
-        for ( i in 0..5){
-            val Addnum = Range.random()
-            Number += Addnum.toString()
-        }
-        return Number
-    }
-}*/

@@ -67,9 +67,7 @@ class JoinFrag : Fragment() {
                 }
             }
 
-
             val Frag = requireActivity().supportFragmentManager.beginTransaction()
-            // 다시 menu로 돌아가는거
             Frag.remove(this)
             Frag.commit()
         }
@@ -77,7 +75,7 @@ class JoinFrag : Fragment() {
     }
 
 
-    // 입력한 팀 코드가 DB에 있으면 가입하는 함수를 구현해야해
+    // 입력한 팀 코드가 DB에 있으면 가입하는 함수를 구현
     private fun Join( TeamCode : String){
 
         val TeamRef = mDbref.child("Team").child(TeamCode)
@@ -115,7 +113,7 @@ class JoinFrag : Fragment() {
             TeamRef.setValue(Team(TeamName,TeamCode))
         }
             override fun onCancelled(databaseError: DatabaseError) {
-                // 데이터베이스에서 데이터를 가져오는 중 오류가 발생한 경우 처리할 내용을 추가
+                // 실패
                 Toast.makeText(requireContext(), "데이터를 가져오는 중 오류 발생", Toast.LENGTH_SHORT).show()
             }
         })

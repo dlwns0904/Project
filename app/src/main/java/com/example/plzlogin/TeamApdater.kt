@@ -13,7 +13,10 @@ import com.example.plzlogin.databinding.ListTeamsBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 // 왜 private val 일까?
@@ -45,11 +48,35 @@ class TeamApdater (private val context : Context, private val Teamlist : ArrayLi
         // 아니지 팀네임 넣어야지
         // createfrag가서 수정해와
 
+        mAuth = Firebase.auth
+
+        mDbref = Firebase.database.reference
+
+        val uid = mAuth.currentUser?.uid!!
+
+
         val TeamCode = Team.teamCode.toString()
-        val TeamName = Team.teamName.toString()
+        var TeamName : String? = null
+
+
+        // 팀 이름이 수정이 되면 모든 팀원 팀 이름이 수정되어야 하기 때문에
+        // 팀 이름을 가져 올 때 Team-TemaCode - TeamName에서 가져옴
+
+        val TeamNameRef = mDbref.child("Team").child(TeamCode).child("TeamName")
+        TeamNameRef.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(dataSnapshot: DataSnapshot){
+                TeamName = dataSnapshot.value as String?
+                holder.TeamnameText.text = TeamName
+
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // 오류 처리를 여기에 추가
+            }
+        }
+        )
 
         // 팀네임 넣고
-        holder.TeamnameText.text = Team.teamName
+        /*holder.TeamnameText.text = */
 
         // 이동액티비티
         holder.itemView.setOnClickListener {
@@ -60,14 +87,13 @@ class TeamApdater (private val context : Context, private val Teamlist : ArrayLi
 
             // 팀 이름이랑 팀네임 넘겨주기 을 넘겨줘 팀 메뉴 액티비티로
             // 팀 메뉴는 성훈이가 해줘
-            intent.putExtra("TeamName",TeamName)
+
+            // 널 체크
+            if (TeamName != null) intent.putExtra("TeamName",TeamName)
             intent.putExtra("TeamCode",TeamCode)
             context.startActivity(intent)
         }
-        mAuth = Firebase.auth
-        mDbref = Firebase.database.reference
 
-        val uid = mAuth.currentUser?.uid!!
 
 
 
