@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plzlogin.databinding.ActivityChatBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
@@ -64,6 +65,7 @@ class ChatActivity : AppCompatActivity() {
         val user = Firebase.auth.currentUser
         val uid = user!!.uid
         userIdTextView.text = user?.email
+
 
 
         mDbref.child("user").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {

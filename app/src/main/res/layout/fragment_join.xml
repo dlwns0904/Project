@@ -26,6 +26,7 @@
             android:id="@+id/btn_Join"
             android:layout_width="129dp"
             android:layout_height="60dp"
+            android:backgroundTint="#3660DC"
             android:text="참가"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

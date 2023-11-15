@@ -49,14 +49,19 @@ class TeamMenuActivity : AppCompatActivity() {
 
         //날짜 선택
         var cal : CalendarView = findViewById(R.id.Cal)
+        cal.minDate = System.currentTimeMillis()
+        cal.maxDate = System.currentTimeMillis() + 864000000
         cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            binding.CalTxt.text = "시간 선택"
+            var date = "${year}년${month}월${dayOfMonth}일"
+            binding.CalTxt.text = "${date} 시간 선택"
+            //시간 선택
+            binding.CalTxt.setOnClickListener {
+                val intent : Intent = Intent(this@TeamMenuActivity,TimeSelect::class.java)
+                intent.putExtra("Date", date)
+                intent.putExtra("TeamCode", teamCode)
+                startActivity(intent)
+            }
         }
 
-        //시간 선택
-        binding.CalTxt.setOnClickListener {
-            val intent : Intent = Intent(this@TeamMenuActivity,TimeSelect::class.java)
-            startActivity(intent)
-        }
     }
 }
