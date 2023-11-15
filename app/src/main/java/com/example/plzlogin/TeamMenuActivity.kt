@@ -58,6 +58,7 @@ class TeamMenuActivity : AppCompatActivity() {
             binding.CalTxt.setOnClickListener {
                 val intent : Intent = Intent(this@TeamMenuActivity,TimeSelect::class.java)
                 intent.putExtra("Date", date)
+                intent.putExtra("TeamCode", teamCode)
                 startActivity(intent)
             }
         }
