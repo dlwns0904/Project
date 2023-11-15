@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plzlogin.databinding.ListTimesBinding
 
-class TimesAdapater(val times: Array<Time>): RecyclerView.Adapter<TimesAdapater.Holder>() {
+class TimesAdapater(val times: List<Time>): RecyclerView.Adapter<TimesAdapater.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = ListTimesBinding.inflate(LayoutInflater.from(parent.context))
