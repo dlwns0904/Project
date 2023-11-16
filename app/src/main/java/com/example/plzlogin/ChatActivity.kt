@@ -31,11 +31,35 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var mDbref: DatabaseReference
     private lateinit var navView: NavigationView
     private lateinit var teamCode: String
+    private lateinit var senderUid: String // 고민
+    private lateinit var receiverUid: String
+    private lateinit var currentRoom: String // 보낸 대화방
+    private lateinit var receiverRoom: String // 받는 대화방
+    private lateinit var messageList: ArrayList<Message>
+    private var currentUserName: String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 초기화
+        messageList = ArrayList()
+        val messageAdapter = MessageAdapter(this, messageList)
+
+        // recyclerView
+        binding.recyclerChat.layoutManager = LinearLayoutManager(this)
+        binding.recyclerChat.adapter = messageAdapter
+
+        // 인스턴스 초기화
+        mAuth = Firebase.auth
+        mDbref = Firebase.database.reference
+
+        // 이전화면에서 가져오기
+        val intent = intent
+        val teamName = intent.getStringExtra("TeamName")
+        teamCode = intent.getStringExtra("TeamCode").toString()
 
 
 
@@ -43,38 +67,33 @@ class ChatActivity : AppCompatActivity() {
         val btnMenu = binding.includeToolbar.btnMenu
         drawerLayout = binding.drawerLayout
         navView = binding.navView
-        mAuth = Firebase.auth
-        mDbref = Firebase.database.reference
+
 
         val menu: Menu = navView.menu
         val Users = menu.findItem(R.id.subtitle)?.subMenu
         // Log.d("slsls", "group2: $group2")
-        // group2에 해당하는 SubMenu를 찾음
-        val currentUserId = mAuth.currentUser?.uid
-
-        val intent = intent
-        val teamName = intent.getStringExtra("TeamName")
-        teamCode = intent.getStringExtra("TeamCode").toString()
-
+        // subtitle에 해당하는 SubMenu를 찾음
 
 
         val headerView = navView.getHeaderView(0)
         val userNameTextView = headerView.findViewById<TextView>(R.id.tv_nav_userName)
         val userIdTextView = headerView.findViewById<TextView>(R.id.tv_nav_userEmail)
 
-        val user = Firebase.auth.currentUser
-        val uid = user!!.uid
-        userIdTextView.text = user?.email
+        val userList = mutableListOf<String>()
+        val currentUser = mAuth.currentUser
+        val currentUid = currentUser?.uid ?: "" // 현재 user가 null일 경우가 생길 수가 있나 ?
+        userIdTextView.text = currentUser?.email
 
 
-
-        mDbref.child("user").child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+        // 드로어 헤더에 현재 유저 정보
+        mDbref.child("user").child(currentUid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val name = dataSnapshot.child("name").getValue(String::class.java)
                     userNameTextView.text = name
                     val navUsersItem = Users?.findItem(R.id.nav_Users)
                     navUsersItem?.title = name
+                    currentUserName = name.toString()
                 }
             }
 
@@ -84,14 +103,23 @@ class ChatActivity : AppCompatActivity() {
         })
 
 
+
+        // 드로어에 채팅방 참여자 리스트
         val teamRef = mDbref.child("Team").child(teamCode)
         teamRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (userSnapshot in dataSnapshot.children) {
                     val uid = userSnapshot.key
-                    if (uid != currentUserId) { // 현재 사용자의 uid는 제외
-                        val userName = userSnapshot.child("name").getValue(String::class.java)
-                        userName?.let {
+                    uid?.let {
+                        if (it != "TeamName") { // "TeamName"은 제외
+                            receiverUid = it
+                            Log.d("flflf", "receiver Uid: $receiverUid")
+                            userList.add(receiverUid)
+                        }
+                    }
+                    if (uid != currentUid) { // 현재 사용자의 uid는 제외
+                        val usersName = userSnapshot.child("name").getValue(String::class.java)
+                        usersName?.let {
                             val itemId = View.generateViewId() // 아이템 ID 동적으로 생성
                             // Log.d("Dldld", "Generated ItemId: $itemId")
                             val menuItem = Users?.add(Menu.NONE, itemId, Menu.NONE, it)
@@ -99,12 +127,65 @@ class ChatActivity : AppCompatActivity() {
                         }
                     }
                 }
+                // userList = mutableListOf(receiverUid, currentUid)
+                userList.sort()
+                Log.d("rlrlr", "user list: $userList")
+
+                // 그룹 대화방 설정
+                val groupId = teamCode
+                val groupChatRoom = "group_$groupId"
+
+                // 그룹 채팅 메시지 전송
+                binding.btnSend.setOnClickListener {
+                    val message = binding.edtMessage.text.toString()
+                    if (message.trim().isNotEmpty()) { // 공백만 보내기는 안되게
+                        val messageObject = Message(message, currentUid, currentUserName)
+
+                        // 데이터 저장
+                        mDbref.child("Chats").child(groupChatRoom).child("messages").push()
+                            .setValue(messageObject).addOnSuccessListener {
+                                // 저장 성공시
+                                for (memberUid in userList) {
+                                    mDbref.child("Chats").child(groupChatRoom)
+                                        .child("user_$memberUid")
+                                        .child("messages").push().setValue(messageObject)
+                                }
+
+                            }
+                        binding.edtMessage.setText("") // 입력값 초기화
+                    }
+                }
+
+                // 메세지 가져오기
+                mDbref.child("Chats").child(groupChatRoom).child("messages")
+                    .addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            messageList.clear()
+
+                            for (postSnapshot in snapshot.children) {
+                                val message = postSnapshot.getValue(Message::class.java)
+                                messageList.add(message!!)
+                            }
+                            // 적용
+                            messageAdapter.notifyDataSetChanged()
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // 실패 처리
+                        }
+
+                    })
+
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 실패 처리
+            override fun onCancelled(error: DatabaseError) {
+
             }
         })
+
+
+
+
 
         // 툴바
         setSupportActionBar(toolbar) // toolbar를 액티비티의 액션바로 지정
@@ -154,102 +235,4 @@ class ChatActivity : AppCompatActivity() {
 }
 
 
-// 검색버튼, 채팅 기능, 카메라&포토 기능, 참여자 리스트, 유저 네임 네비에 띄우기
-/*
-
-
-
-        /*(val teamRef = mDbref.child("Team").child(teamCode)
-        teamRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (userSnapshot in dataSnapshot.children) {
-                    val uid = userSnapshot.key
-                    if (uid != currentUserId) { // 현재 사용자의 uid는 제외
-                        val userName = userSnapshot.child("name").getValue(String::class.java)
-
-                        // 유저 이름이 null이 아니라면 메뉴에 아이템 추가
-                        userName?.let {
-                            val itemId = View.generateViewId() // 아이템 ID 동적으로 생성
-                            val menuItem = group2!!.add(Menu.NONE, itemId, Menu.NONE, it)
-                            menuItem.setIcon(R.drawable.ic_user) // 원하는 아이콘으로 설정
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 실패 처리
-            }
-        })*/
-
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.drawer_menu, menu)
-
-        // MenuItem을 가져옴
-        val menuItem = menu.findItem(R.id.rec_Menu)
-
-        // ActionLayout을 가져옴
-        val actionView = MenuItemCompat.getActionView(menuItem)
-
-        // ActionLayout 안에 있는 RecyclerView를 찾음
-        val recyclerView: RecyclerView = actionView.findViewById(R.id.recyclerView)
-
-        val teamRef = mDbref.child("Team").child(teamCode)
-        userList = ArrayList()
-
-        teamRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                userList.clear()
-
-                for (uidSnapshot in dataSnapshot.children) {
-                    val uid = uidSnapshot.key
-                    uid?.let {
-                        val userRef = teamRef.child(it)
-                        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(userSnapshot: DataSnapshot) {
-                                val name = userSnapshot.child("name").getValue(User::class.java)
-                                name?.let {
-                                    userList.add(name)
-
-                                    if (userList.size == dataSnapshot.childrenCount.toInt()) {
-                                        // 기존 어댑터 업데이트
-                                        userAdapter.notifyDataSetChanged()
-                                    }
-                                }
-                            }
-
-                            override fun onCancelled(error: DatabaseError) {
-                                // 실패 처리
-                            }
-                        })
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 실패 처리
-            }
-        })
-
-        return true
-    }*/
-
-}
-
-
-// 검색버튼, 채팅 기능, 카메라&포토 기능, 참여자 리스트, 유저 네임 네비에 띄우기
-
- */
+// senderUid? currentUid? 객체이름 다시 생각해보기, 샌더와 리시버 나누기 ? 안 나누면 ?
