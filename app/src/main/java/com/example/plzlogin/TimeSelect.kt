@@ -31,7 +31,6 @@ class TimeSelect : AppCompatActivity() {
         val uid = mAuth.currentUser?.uid!!
         val teamCode = intent.getStringExtra("TeamCode").toString()
         val date = intent.getStringExtra("Date").toString()
-        val teamuserRef = mDbref.child("Team").child(teamCode).child("Date")
 
         var times: MutableList<Time> = mutableListOf()
         times = createTimes()
@@ -41,9 +40,8 @@ class TimeSelect : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()) {
                         for(timeSnapshot in snapshot.children) {
-                            val timesnap = timeSnapshot.child("time").getValue(String::class.java).toString()
-                            val selectedsnap = timeSnapshot.child("selected").getValue(String::class.java).toBoolean()
-                            times.add(Time(time = timesnap, isSelected = selectedsnap))
+                            val dateTime = timeSnapshot.getValue(Time::class.java)
+                            times.add(dataTime!!)
                         }
                     }
                 else {
@@ -69,8 +67,7 @@ class TimeSelect : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener {
             //날짜에 시간 저장
-
-            teamuserRef.child(date).child(uid).setValue(times)
+            mDbref.child("Date").child(teamCode).child(date).child(uid).setValue(times)
             val intent: Intent = Intent(this@TimeSelect,TeamMenuActivity::class.java)
             startActivity(intent)
         }

@@ -26,7 +26,7 @@ import com.google.firebase.database.database
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatBinding // private ?
-    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var drawerLayout: DrawerLayout // 앞에 뭐 안 붙어도 되는지
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbref: DatabaseReference
     private lateinit var navView: NavigationView
@@ -49,12 +49,7 @@ class ChatActivity : AppCompatActivity() {
         val messageAdapter = MessageAdapter(this, messageList)
 
         // recyclerView
-        val layoutManager = LinearLayoutManager(this)
-        // 최신 글 먼저 보기(가장 나중에 저장된 글 제일 먼저 보기)
-        // 파이어베이스에서 역조회 안 됨
-        // -> 저장을 역순으로 하겟다.
-        layoutManager.setStackFromEnd(true)
-        binding.recyclerChat.layoutManager = layoutManager
+        binding.recyclerChat.layoutManager = LinearLayoutManager(this)
         binding.recyclerChat.adapter = messageAdapter
 
         // 인스턴스 초기화
@@ -237,8 +232,6 @@ class ChatActivity : AppCompatActivity() {
             else finish()
         }
     }
-
-
 }
 
 
