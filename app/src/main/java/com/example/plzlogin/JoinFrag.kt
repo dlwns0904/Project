@@ -7,17 +7,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.plzlogin.databinding.FragmentJoinBinding
+import com.example.plzlogin.repository.TeamRepository
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class JoinFrag : Fragment() {
 
+
+    private val teamRepository = TeamRepository()
     lateinit var binding : FragmentJoinBinding
 
     lateinit var mAuth : FirebaseAuth
@@ -25,97 +25,44 @@ class JoinFrag : Fragment() {
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-
+        val view = inflater.inflate(R.layout.fragment_join, container, false)
         mAuth = Firebase.auth
-
         mDbref = Firebase.database.reference
 
-        val view = inflater.inflate(R.layout.fragment_join, container, false)
         binding = FragmentJoinBinding.bind(view)
-
 
         // 참가 버튼 눌렀을 때
         binding.btnJoin.setOnClickListener {
             // 입력한 팀 코드
-            val TeamCode = binding.edtTeamcode.text.toString().trim()
+            val teamCode = binding.edtTeamcode.text.toString().trim()
 
             // DB에 일단 팀 코드 있는지 없는지 확인 있으면 함수 실행 없으면 메세지
-            if (TeamCode.length != 6){
+            if (teamCode.length != 6){
                 Toast.makeText(requireContext(),"6자리 숫자를 입력해주세요",Toast.LENGTH_SHORT).show()
             }
-
             else{
 
                 val TeamRef = mDbref.child("Team")
-                TeamRef.child(TeamCode).get().addOnCompleteListener { task ->
+                TeamRef.child(teamCode).get().addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-
                         val dataSnapshot = task.result
 
                         // 데이터 있으면 팀 참가해주고
                         if (dataSnapshot.exists()) {
 
-                            Join(TeamCode)
-                            AddTeam(TeamCode)
+                            teamRepository.joinTeam(teamCode)
+                            teamRepository.addTeam(teamCode)
 
                         } else {
-                            // 이거 왜 안되는지?
-                            /*Toast.makeText(requireContext(),"존재하지 않는 코드입니다",Toast.LENGTH_SHORT).show()*/
-
+                            // 존재하지 않는 팀코드면 일단 Toast메세지를 나오게 해야함
                         }
                     }
                 }
             }
-
             val Frag = requireActivity().supportFragmentManager.beginTransaction()
             Frag.remove(this)
             Frag.commit()
         }
         return view
-    }
-
-
-    // 입력한 팀 코드가 DB에 있으면 가입하는 함수를 구현
-    private fun Join( TeamCode : String){
-
-        val TeamRef = mDbref.child("Team").child(TeamCode)
-        // 이름 가지고 오기
-        val UsernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
-
-        UsernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val Username = dataSnapshot.value as String?
-                TeamRef.child(mAuth.currentUser?.uid!!).setValue(
-                    CreateFrag.User(
-                        Username,
-                        mAuth.currentUser?.uid!!
-                    )
-                )
-
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 실패
-                Toast.makeText(requireContext(), "데이터를 가져오는 중 오류 발생", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun AddTeam(TeamCode: String){
-        // 팀 네임을 가져 와야 겠지?
-        val TeamRef = mDbref.child("Team").child(TeamCode).child("TeamName")
-
-        TeamRef.addListenerForSingleValueEvent( object : ValueEventListener{override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-            val TeamName = dataSnapshot.value as String?
-            val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(TeamCode)
-            // 팀 네임 , 팀 코드 DB에 저장
-            TeamRef.setValue(Team(TeamName,TeamCode))
-        }
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 실패
-                Toast.makeText(requireContext(), "데이터를 가져오는 중 오류 발생", Toast.LENGTH_SHORT).show()
-            }
-        })
     }
 }

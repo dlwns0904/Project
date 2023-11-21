@@ -44,11 +44,11 @@ class RenameFrag : Fragment() {
         // USER - uid - TeamCode - teamName
         // Team - Teamcode - teamName
         binding.btnReName.setOnClickListener {
-            val Rename = binding.edtReTeamName.text.toString().trim()
+            val rename = binding.edtReTeamName.text.toString().trim()
             // 널 체크
             if (TeamCode != null) {
-                mDbref.child("USER").child(uid).child(TeamCode).child("teamName").setValue(Rename)
-                mDbref.child("Team").child(TeamCode).child("TeamName").setValue(Rename)
+                mDbref.child("USER").child(uid).child(TeamCode).child("teamName").setValue(rename)
+                mDbref.child("Team").child(TeamCode).child("TeamName").setValue(rename)
             }
             else{
                 Toast.makeText(context,"숫자없음",Toast.LENGTH_SHORT).show()

@@ -4,129 +4,41 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.plzlogin.databinding.FragmentCreateBinding
-import com.google.firebase.Firebase
+import com.example.plzlogin.repository.TeamRepository
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.database
 
 
 class CreateFrag : Fragment() {
 
-
-
     lateinit var binding: FragmentCreateBinding
 
+    private val teamRepository = TeamRepository()
     private lateinit var mDbref : DatabaseReference
-
-    lateinit var mAuth : FirebaseAuth
-
+    private lateinit var mAuth : FirebaseAuth
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_create, container, false)
         binding = FragmentCreateBinding.bind(view) // 이 부분을 수정
 
-        // 팀 이름
-
-        // 팀 코드는 랜덤한 숫자 6자리로?
-        val Teamcode = RandomNumber()
-
-
-        mAuth = Firebase.auth
-
-        mDbref = Firebase.database.reference
-
-
+        val teamCode = teamRepository.RandomNumber()
         // 팀 코드 보여주고
-        binding.Teamnum.text = Teamcode
+        binding.Teamnum.text = teamCode
 
         // 팀생성하기 누르면
         binding.btnTeamCreate.setOnClickListener {
 
-            CreateTeam(Teamcode)
-            AddTeam(Teamcode)
-
+            teamRepository.createTeam(binding,teamCode)
+            teamRepository.addTeam(binding,teamCode)
 
             // 다시 메뉴로 돌아가기
             val Frag = requireActivity().supportFragmentManager.beginTransaction()
             Frag.remove(this) // this@CreateFrag
             Frag.commit()
-
         }
         return view
     }
-
-
-    // 팀 생성
-    private fun CreateTeam(TeamCode: String) {
-
-        val TeamName = binding.edtTeam.text.toString().trim()
-
-        val TeamRef = mDbref.child("Team").child(TeamCode)
-
-        TeamRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful)
-            {
-                TeamRef.setValue(TeamCode)
-                TeamRef.child("TeamName").setValue(TeamName)
-
-                // DB에서 user에 저장된 name을 가져와
-                val UsernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
-                UsernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val Username = dataSnapshot.value as String?
-                        TeamRef.child(mAuth.currentUser?.uid!!).setValue(User( Username, mAuth.currentUser?.uid!! ))
-
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // 데이터 베이스에서 데이터를 가져오는 중 오류가 발생한 경우 처리할 내용을 추가
-                        Toast.makeText(requireContext(), "데이터를 가져오는 중 오류 발생", Toast.LENGTH_SHORT).show()
-                    }
-                })
-            }
-            else {
-                // 안되면 다시 지우고
-                // 지금 추가한게 TeamRef.get().addOnCompleteListener요기 부분
-                // 팀 코드 만약에 중복된 게 있으면 메시지 출력
-                Toast.makeText(context,"이미 존재하는 팀 코드 입니다",Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    // 내 uid에 팀 코드랑 팀이름 추가
-    private fun AddTeam(TeamCode: String){
-
-        val TeamName = binding.edtTeam.text.toString().trim()
-        val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(TeamCode)
-
-        TeamRef.setValue(Team(TeamName,TeamCode))
-    }
-
-
-    data class User(
-        var name : String?,
-        var uid : String
-    ){
-        constructor() : this( "", "" ) // 주생성자로 바꿀 수 있지 않나?
-    }
-
-
-    // 랜덤한 팀 코드 숫자 생성
-    private fun RandomNumber(): String {
-        var Number = ""
-        val Range = 0..9
-
-        for (i in 0..5) {
-            val Addnum = Range.random()
-            Number += Addnum.toString()
-        }
-        return Number
-    }
+    data class User( var name : String?, var uid : String)
 }
