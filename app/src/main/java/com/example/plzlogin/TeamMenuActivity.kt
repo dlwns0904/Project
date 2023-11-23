@@ -52,7 +52,7 @@ class TeamMenuActivity : AppCompatActivity() {
         cal.minDate = System.currentTimeMillis()
         cal.maxDate = System.currentTimeMillis() + 864000000
         cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            var date = "${year}년${month}월${dayOfMonth}일"
+            var date = "${year}년${month + 1}월${dayOfMonth}일"
             binding.CalTxt.text = "${date} 시간 선택"
             //시간 선택
             binding.CalTxt.setOnClickListener {
