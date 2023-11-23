@@ -16,7 +16,7 @@ import com.google.firebase.database.database
 
 // firebase를 통해서 가져오겠지
 class TeamRepository {
-
+    // 팀 코드 중복처리 해야하고
 
 
     private var mAuth : FirebaseAuth = Firebase.auth
@@ -26,8 +26,7 @@ class TeamRepository {
     val teamList: LiveData<List<Team>> get() = _teamlist
 
     fun observeTeam(){
-        /*mAuth = Firebase.auth
-        mDbref = Firebase.database.reference*/
+
         val uid = mAuth.currentUser?.uid!!
         val teamref = mDbref.child("USER").child(uid)
         teamref.addValueEventListener(object : ValueEventListener {
@@ -47,7 +46,7 @@ class TeamRepository {
         })
     }
 
-
+    // 요거 다르게 수정해야하고
     fun RandomNumber(): String {
         var Number = ""
         val Range = 0..9
@@ -152,5 +151,15 @@ class TeamRepository {
         })
     }
 
-
+    // 이름 수정
+    fun reName(teamCode : String?, rename : String){
+        if (teamCode != null) { // 널 체크
+            val uid = mAuth.currentUser?.uid!!
+            mDbref.child("USER").child(uid).child(teamCode).child("teamName").setValue(rename)
+            mDbref.child("Team").child(teamCode).child("TeamName").setValue(rename)
+        }
+        else{
+            /*Toast.makeText(context,"숫자없음", Toast.LENGTH_SHORT).show()*/
+        }
+    }
 }

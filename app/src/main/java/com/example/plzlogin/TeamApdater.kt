@@ -52,11 +52,6 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
 
         val uid = mAuth.currentUser?.uid!!
 
-
-        /*val TeamCode = Team.teamCode.toString()
-        // null? -> 널 체크하고 intent로 넘겨줄려고
-        var TeamName = Team.teamName*/
-
         val teamcode = team?.teamCode.toString()
         var teamName: String? = null
         // 팀 이름이 수정이 되면 모든 팀원 팀 이름이 수정되어야 하기 때문에
@@ -120,15 +115,13 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
             val bundle : Bundle = Bundle()
             bundle.putString("TeamCode",teamcode)
 
-
             ReNameFrag.arguments = bundle
 
             val frag = (context as menu).supportFragmentManager.beginTransaction()
             frag.replace(R.id.Menufrag, ReNameFrag).commit()
 
-
             notifyDataSetChanged()
-            // 토스트 메세지도 추가?ㅅ
+            // 토스트 메세지도 추가?
         }
     }
 

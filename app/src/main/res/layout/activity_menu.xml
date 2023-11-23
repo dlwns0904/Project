@@ -88,4 +88,12 @@
         app:layout_constraintStart_toStartOf="@+id/toolbar2"
         app:layout_constraintTop_toTopOf="@+id/toolbar2" />
 
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="82dp"
+        android:layout_height="43dp"
+        android:text="out"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar2"
+        tools:layout_editor_absoluteY="0dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

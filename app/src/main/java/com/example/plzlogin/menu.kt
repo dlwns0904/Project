@@ -2,6 +2,7 @@ package com.example.plzlogin
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plzlogin.databinding.ActivityMenuBinding
@@ -22,9 +23,7 @@ class menu : AppCompatActivity() {
         setContentView(binding.root)
 
         // 리스트 초기화
-
         TeamList = ArrayList()
-
         adapter = TeamApdater(this, teamViewModel)
 
         binding.recTeam.layoutManager = LinearLayoutManager(this)
@@ -70,6 +69,13 @@ class menu : AppCompatActivity() {
         // 팀 참가 누를 때
         binding.btnJoin.setOnClickListener {
             goFrag(1)
+        }
+
+        // 로그아웃
+        binding.btnLogout.setOnClickListener {
+            val intent = Intent(this,LoginActivity::class.java)
+            Toast.makeText(this,"로그아웃",Toast.LENGTH_SHORT).show()
+            startActivity(intent)
         }
     }
 
