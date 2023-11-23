@@ -81,18 +81,21 @@
         android:layout_height="wrap_content"
         android:text="팀 목록"
         android:textColor="#FFFFFF"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
         app:layout_constraintEnd_toEndOf="@+id/toolbar2"
         app:layout_constraintStart_toStartOf="@+id/toolbar2"
-        app:layout_constraintTop_toTopOf="@+id/toolbar2" />
+        app:layout_constraintTop_toTopOf="@+id/toolbar2"
+        />
 
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="82dp"
         android:layout_height="43dp"
         android:text="out"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/toolbar2"
         tools:layout_editor_absoluteY="0dp" />
 

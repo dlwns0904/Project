@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import com.example.plzlogin.databinding.FragmentJoinBinding
 import com.example.plzlogin.repository.TeamRepository
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
 
@@ -20,18 +18,16 @@ class JoinFrag : Fragment() {
     private val teamRepository = TeamRepository()
     lateinit var binding : FragmentJoinBinding
 
-    lateinit var mAuth : FirebaseAuth
     lateinit var mDbref : DatabaseReference
 
     override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_join, container, false)
-        mAuth = Firebase.auth
         mDbref = Firebase.database.reference
 
         binding = FragmentJoinBinding.bind(view)
 
-        // 참가 버튼 눌렀을 때
+        // 참가 버튼
         binding.btnJoin.setOnClickListener {
             // 입력한 팀 코드
             val teamCode = binding.edtTeamcode.text.toString().trim()
@@ -54,11 +50,12 @@ class JoinFrag : Fragment() {
                             teamRepository.addTeam(teamCode)
 
                         } else {
-                            // 존재하지 않는 팀코드면 일단 Toast메세지를 나오게 해야함
+                            Toast.makeText(context,"존재하지 않는 팀코드입니다",Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             }
+
             val Frag = requireActivity().supportFragmentManager.beginTransaction()
             Frag.remove(this)
             Frag.commit()

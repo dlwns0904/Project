@@ -14,6 +14,7 @@ class RenameFrag : Fragment() {
 
     private val teamRepository = TeamRepository()
     lateinit var binding : FragmentRenameBinding
+    lateinit var adapter : TeamApdater
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +31,7 @@ class RenameFrag : Fragment() {
             val rename = binding.edtReTeamName.text.toString().trim()
 
             teamRepository.reName(teamCode, rename)
+            adapter.notifyDataSetChanged()
             Toast.makeText(context,"수정이 완료되었습니다",Toast.LENGTH_SHORT).show()
 
             val Frag = requireActivity().supportFragmentManager.beginTransaction()

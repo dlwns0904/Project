@@ -27,7 +27,7 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
     lateinit var mAuth : FirebaseAuth
     lateinit var mDbref : DatabaseReference
 
-    // 레이아웃을 연결하는
+    // 레이아웃을 연결
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamHolder {
 
         val binding = ListTeamsBinding.inflate(LayoutInflater.from(parent.context))
@@ -35,7 +35,7 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
 
         return holder
     }
-    // 실제 리스트의 개수를 반환해야
+    // 실제 리스트의 개수를 반환
     override fun getItemCount(): Int {
         // 사이즈 null헤야해 안하면 오류
         return teamViewModel.teamlist.value?.size ?: 0
@@ -43,7 +43,7 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
 
     // 데이터 연결
     override fun onBindViewHolder(holder: TeamHolder, position: Int) {
-        /*val Team = Teamlist[position]*/
+
         val team = teamViewModel.teamlist.value?.get(position)
 
 
@@ -54,6 +54,7 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
 
         val teamcode = team?.teamCode.toString()
         var teamName: String? = null
+
         // 팀 이름이 수정이 되면 모든 팀원 팀 이름이 수정되어야 하기 때문에
         // 팀 이름을 가져 올 때 Team-TemaCode - TeamName에서 가져옴
 
@@ -74,16 +75,11 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
         }
         )
 
-        // 팀네임 넣고
-        /*holder.TeamnameText.text = */
 
         // 이동액티비티
         holder.itemView.setOnClickListener {
             notifyDataSetChanged()
             val intent = Intent(context,TeamMenuActivity::class.java)
-
-            // 팀 이름이랑 팀네임 넘겨주기 을 넘겨줘 팀 메뉴 액티비티로
-            // 팀 메뉴는 성훈이가 해줘
 
             // 널 체크
             if (teamName != null) intent.putExtra("TeamName",teamName)
@@ -92,10 +88,6 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
         }
 
 
-
-
-        // 삭제 누르면 팀 삭제
-        // 이미지 추가 해야해
 
         holder.btnDel.setOnClickListener {
 

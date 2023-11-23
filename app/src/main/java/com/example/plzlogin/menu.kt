@@ -40,22 +40,6 @@ class menu : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
 
-
-        // 요기도 수정
-        // USER의 정보를 가지고 오겠다
-        /*mDbref.child("USER").child(mAuth.currentUser?.uid!!).addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                TeamList.clear()
-                for (postSnapshot in snapshot.children){
-                    val TeamName = postSnapshot.getValue(Team::class.java)
-                    TeamList.add(TeamName!!)
-                }
-                adapter.notifyDataSetChanged()
-            }
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })*/
-
         binding.btnMycalendar.setOnClickListener{
             val intent = Intent(this, MyCalendarActivity::class.java)
             startActivity(intent)
