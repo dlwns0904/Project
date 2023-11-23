@@ -4,15 +4,34 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" >
+
+        <TextView
+            android:id="@+id/tv_senderMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:background="#62DAFF"
+            android:padding="8dp"
+            android:maxWidth="200dp"
+            android:text="보내는 메세지"
+            android:textSize="18dp" />
+
     <TextView
-        android:id="@+id/tv_sendMessage"
+        android:id="@+id/tv_senderTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_margin="5dp"
-        android:background="#62DAFF"
-        android:padding="10dp"
-        android:text="보내는 메세지"
-        android:textSize="18dp" />
+        android:layout_marginEnd="5dp"
+        android:text="오전 10:23"
+        android:textSize="12dp"
+        android:layout_toStartOf="@id/tv_senderMessage"
+        android:layout_alignBottom="@id/tv_senderMessage"/>
+    </RelativeLayout>
+
 
 </LinearLayout>

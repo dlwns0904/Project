@@ -2,29 +2,60 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_receiver"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text="이름"
-        android:textColor="#000000"
-        android:textStyle="bold" />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" >
 
-    <TextView
-        android:id="@+id/tv_receiverMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_margin="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="#FFDD62"
-        android:padding="10dp"
-        android:text="받는 메세지"
-        android:textSize="18dp" />
+        <ImageView
+            android:id="@+id/iv_receiverImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/ic_user"
+            app:tint="@color/black" />
 
+        <TextView
+            android:id="@+id/tv_receiver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/iv_receiverImage"
+            android:text="이름"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_receiverMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_receiver"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/iv_receiverImage"
+            android:background="#FFDD62"
+            android:maxWidth="200dp"
+            android:padding="8dp"
+            android:text="받는 메세지"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tv_receiverTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_receiverMessage"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/tv_receiverMessage"
+            android:text="오전 10:23"
+            android:textSize="12dp" />
+
+    </RelativeLayout>
 
 
 

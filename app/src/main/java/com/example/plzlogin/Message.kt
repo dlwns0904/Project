@@ -2,8 +2,9 @@ package com.example.plzlogin
 
 data class Message(
     var message: String?,
-    var sendertId: String?,
-    var senderName: String?
+    var senderId: String?,
+    var senderName: String?,
+    val timestamp: Long?
 ){
-    constructor():this("","","")
+    constructor():this("","","",System.currentTimeMillis())
 }

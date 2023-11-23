@@ -1,17 +1,27 @@
 package com.example.plzlogin
 
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Highlights
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.plzlogin.databinding.ActivityChatBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
@@ -22,6 +32,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.TimeZone
 
 class ChatActivity : AppCompatActivity() {
 
@@ -37,6 +52,9 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var receiverRoom: String // 받는 대화방
     private lateinit var messageList: ArrayList<Message>
     private var currentUserName: String = ""
+    private var searchKeyword: String = ""
+    private lateinit var messageAdapter: MessageAdapter
+    private lateinit var recyclerView: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,11 +64,13 @@ class ChatActivity : AppCompatActivity() {
 
         // 초기화
         messageList = ArrayList()
-        val messageAdapter = MessageAdapter(this, messageList)
+        messageAdapter = MessageAdapter(this, messageList)
+
 
         // recyclerView
         binding.recyclerChat.layoutManager = LinearLayoutManager(this)
         binding.recyclerChat.adapter = messageAdapter
+
 
         // 인스턴스 초기화
         mAuth = Firebase.auth
@@ -62,9 +82,13 @@ class ChatActivity : AppCompatActivity() {
         teamCode = intent.getStringExtra("TeamCode").toString()
 
 
-
         val toolbar = binding.includeToolbar.toolbar
         val btnMenu = binding.includeToolbar.btnMenu
+        val btnSearch = binding.includeToolbar.btnSearch
+        btnSearch.setOnClickListener {
+            // 검색 다이얼로그 또는 검색 뷰를 표시
+            showSearchDialog()
+        }
         drawerLayout = binding.drawerLayout
         navView = binding.navView
 
@@ -86,22 +110,22 @@ class ChatActivity : AppCompatActivity() {
 
 
         // 드로어 헤더에 현재 유저 정보
-        mDbref.child("user").child(currentUid).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    val name = dataSnapshot.child("name").getValue(String::class.java)
-                    userNameTextView.text = name
-                    val navUsersItem = Users?.findItem(R.id.nav_Users)
-                    navUsersItem?.title = name
-                    currentUserName = name.toString()
+        mDbref.child("user").child(currentUid)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        val name = dataSnapshot.child("name").getValue(String::class.java)
+                        userNameTextView.text = name
+                        val navUsersItem = Users?.findItem(R.id.nav_Users)
+                        navUsersItem?.title = name
+                        currentUserName = name.toString()
+                    }
                 }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // 실패 처리
-            }
-        })
-
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // 실패 처리
+                }
+            })
 
 
         // 드로어에 채팅방 참여자 리스트
@@ -109,7 +133,7 @@ class ChatActivity : AppCompatActivity() {
         teamRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (userSnapshot in dataSnapshot.children) {
-                    val uid = userSnapshot.key
+                    val uid = userSnapshot.key //.also, apply
                     uid?.let {
                         if (it != "TeamName") { // "TeamName"은 제외
                             receiverUid = it
@@ -139,7 +163,8 @@ class ChatActivity : AppCompatActivity() {
                 binding.btnSend.setOnClickListener {
                     val message = binding.edtMessage.text.toString()
                     if (message.trim().isNotEmpty()) { // 공백만 보내기는 안되게
-                        val messageObject = Message(message, currentUid, currentUserName)
+                        val timestamp = System.currentTimeMillis() // 현재 시간을 밀리초로 얻음
+                        val messageObject = Message(message, currentUid, currentUserName, timestamp)
 
                         // 데이터 저장
                         mDbref.child("Chats").child(groupChatRoom).child("messages").push()
@@ -168,6 +193,7 @@ class ChatActivity : AppCompatActivity() {
                             }
                             // 적용
                             messageAdapter.notifyDataSetChanged()
+                            binding.recyclerChat.scrollToPosition(messageList.size - 1)
                         }
 
                         override fun onCancelled(databaseError: DatabaseError) {
@@ -185,14 +211,10 @@ class ChatActivity : AppCompatActivity() {
 
 
 
-
-
         // 툴바
         setSupportActionBar(toolbar) // toolbar를 액티비티의 액션바로 지정
         supportActionBar?.setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
         supportActionBar?.title = teamName
-
-
 
 
         // 툴바 메뉴 버튼
@@ -232,6 +254,47 @@ class ChatActivity : AppCompatActivity() {
             else finish()
         }
     }
+
+
+
+    private fun showSearchDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("검색")
+
+        val editText = EditText(this)
+        builder.setView(editText)
+
+        builder.setPositiveButton("확인") { dialog, which ->
+            // 확인 버튼을 눌렀을 때의 처리
+            val searchKeyword = editText.text.toString()
+            //messageAdapter.filterByKeyword(searchKeyword)
+            if (!searchKeyword.isEmpty() && messageList.isNotEmpty()) {
+                val firstMatchingPosition = findFirstMatchingPosition(searchKeyword)
+                if (firstMatchingPosition != -1) {
+                    binding.recyclerChat.scrollToPosition(firstMatchingPosition)
+                    messageAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+        builder.setNegativeButton("취소") { dialog, which ->
+            // 취소 버튼을 눌렀을 때의 처리
+        }
+
+        builder.show()
+    }
+    private fun findFirstMatchingPosition(keyword: String): Int {
+        for ((index, message) in messageList.withIndex()) {
+            if (message.message?.contains(keyword) == true) {
+                return index
+            }
+        }
+        return -1
+    }
+
+
+
+
 }
 
 
