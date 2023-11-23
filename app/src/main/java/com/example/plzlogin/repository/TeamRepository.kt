@@ -157,6 +157,7 @@ class TeamRepository {
             val uid = mAuth.currentUser?.uid!!
             mDbref.child("USER").child(uid).child(teamCode).child("teamName").setValue(rename)
             mDbref.child("Team").child(teamCode).child("TeamName").setValue(rename)
+
         }
         else{
             /*Toast.makeText(context,"숫자없음", Toast.LENGTH_SHORT).show()*/
