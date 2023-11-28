@@ -38,7 +38,8 @@ class TimeSelect : AppCompatActivity() {
         val timesAdapater = TimesAdapater(times)
         binding.recTimes.layoutManager = LinearLayoutManager(this)
         binding.recTimes.adapter = timesAdapater
-        // 시간 데이터를 가져올려고 하는데 오류 발생
+
+        // 시간리스트가 존재하면 가져오고 존재하지 않으면 새로 생성
         val dateRef = mDbref.child("Date").child(teamCode).child(date).child(uid)
         dateRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -49,7 +50,7 @@ class TimeSelect : AppCompatActivity() {
                         }
                     }
                 else {
-                    times = createTimes()
+                    times.addAll(createTimes())
                 }
 
                 timesAdapater.notifyDataSetChanged()

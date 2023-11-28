@@ -53,9 +53,17 @@ class TeamMenuActivity : AppCompatActivity() {
         cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
             var date = "${year}년${month + 1}월${dayOfMonth}일"
             binding.CalTxt.text = "${date} 시간 선택"
+            binding.btnMeet.text = "${date} 회의 일정"
             //시간 선택
             binding.CalTxt.setOnClickListener {
                 val intent : Intent = Intent(this@TeamMenuActivity,TimeSelect::class.java)
+                intent.putExtra("Date", date)
+                intent.putExtra("TeamCode", teamCode)
+                startActivity(intent)
+            }
+
+            binding.btnMeet.setOnClickListener {
+                val intent : Intent = Intent(this@TeamMenuActivity,MeetConfirm::class.java)
                 intent.putExtra("Date", date)
                 intent.putExtra("TeamCode", teamCode)
                 startActivity(intent)

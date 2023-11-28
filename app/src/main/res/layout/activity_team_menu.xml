@@ -16,7 +16,7 @@
 
     <Button
         android:id="@+id/btn_Board"
-        android:layout_width="198dp"
+        android:layout_width="206dp"
         android:layout_height="50dp"
         android:text="투표"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,10 +24,10 @@
 
     <Button
         android:id="@+id/Cal_txt"
-        android:layout_width="wrap_content"
+        android:layout_width="206dp"
         android:layout_height="wrap_content"
         android:text="날짜를 선택해 주세요"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
 
@@ -48,6 +48,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_Meet"
+        android:layout_width="206dp"
+        android:layout_height="wrap_content"
+        android:text="날짜를 선택해 주세요"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

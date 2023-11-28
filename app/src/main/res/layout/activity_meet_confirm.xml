@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MeetConfirm">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar5"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="79dp"
+        android:layout_height="62dp"
+        android:gravity="center"
+        android:text="회의 제목: "
+        android:textAlignment="textEnd"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_meetTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_meetTitle"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/txt_meetTitle"
+        android:layout_width="323dp"
+        android:layout_height="62dp"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="회의 제목을 입력해주세요"
+        android:background="@null"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar5" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="79dp"
+        android:layout_height="62dp"
+        android:gravity="center"
+        android:text="시간: "
+        android:textAlignment="textEnd"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="79dp"
+        android:layout_height="62dp"
+        android:text="장소: "
+        android:textAlignment="textEnd"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <EditText
+        android:id="@+id/txt_meetPlace"
+        android:layout_width="323dp"
+        android:layout_height="62dp"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="회의 장소를 입력해주세요"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <Button
+        android:id="@+id/btn_meetsave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="저장"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_meetPlace" />
+
+    <EditText
+        android:id="@+id/txt_meetStart"
+        android:layout_width="140dp"
+        android:layout_height="62dp"
+        android:ems="10"
+        android:hint="시작 시간"
+        android:inputType="time"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/txt_meetTitle" />
+
+    <EditText
+        android:id="@+id/txt_meetEnd"
+        android:layout_width="140dp"
+        android:layout_height="62dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="끝나는 시간"
+        android:inputType="time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_meetTitle" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="35dp"
+        android:layout_height="62dp"
+        android:text="~"
+        android:gravity="center"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/txt_meetEnd"
+        app:layout_constraintStart_toEndOf="@+id/txt_meetStart"
+        app:layout_constraintTop_toBottomOf="@+id/txt_meetTitle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
