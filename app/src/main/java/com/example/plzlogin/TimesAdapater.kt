@@ -22,8 +22,8 @@ class TimesAdapater(val times: List<Time>): RecyclerView.Adapter<TimesAdapater.H
         fun bind(time: Time) {
             binding.checkTime.text = time.time
 
-            binding.checkTime.isChecked = time.isSelected
-            binding.checkTime.setOnCheckedChangeListener { _, isChecked -> time.isSelected = isChecked
+            binding.checkTime.isChecked = time.selected
+            binding.checkTime.setOnCheckedChangeListener { _, isChecked -> time.selected = isChecked
             }
         }
     }

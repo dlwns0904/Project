@@ -22,34 +22,32 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/TeamName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FirstTeam"
-        android:textSize="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="6dp"
-        android:textStyle="bold"/>
-
     <Button
         android:id="@+id/Cal_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="날짜를 선택해 주세요"
-        app:layout_constraintBottom_toTopOf="@+id/Cal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TeamName" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
 
     <CalendarView
         android:id="@+id/Cal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/TeamName"
+        app:layout_constraintTop_toBottomOf="@+id/Cal_txt"
         tools:layout_editor_absoluteX="0dp" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar3"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

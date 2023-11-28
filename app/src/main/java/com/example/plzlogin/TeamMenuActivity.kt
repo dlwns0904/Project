@@ -3,6 +3,7 @@ package com.example.plzlogin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.CalendarView
 import com.example.plzlogin.databinding.ActivityMenuBinding
 import com.example.plzlogin.databinding.ActivityTeamMenuBinding
@@ -27,7 +28,7 @@ class TeamMenuActivity : AppCompatActivity() {
         val intent = intent
         val teamName = intent.getStringExtra("TeamName")
         val teamCode = intent.getStringExtra("TeamCode")
-
+        val toolbar3 = binding.toolbar3
 
 
         // 채팅 눌렀을 때
@@ -38,8 +39,6 @@ class TeamMenuActivity : AppCompatActivity() {
             intent.putExtra("TeamCode", teamCode)
             startActivity(intent)
         }
-
-        binding.TeamName.text = teamName
         // 게시판 눌렀을 때
         // 추가해줘
         binding.btnBoard.setOnClickListener {
@@ -63,5 +62,18 @@ class TeamMenuActivity : AppCompatActivity() {
             }
         }
 
+
+        setSupportActionBar(toolbar3)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = teamName
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
