@@ -1,11 +1,7 @@
 package com.example.plzlogin
 
-import android.graphics.Color
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Highlights
-import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.Log
@@ -16,6 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
@@ -23,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plzlogin.databinding.ActivityChatBinding
+import com.example.plzlogin.viewmodel.MessageViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -45,16 +43,18 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbref: DatabaseReference
     private lateinit var navView: NavigationView
-    private lateinit var teamCode: String
     private lateinit var senderUid: String // 고민
     private lateinit var receiverUid: String
     private lateinit var currentRoom: String // 보낸 대화방
     private lateinit var receiverRoom: String // 받는 대화방
-    private lateinit var messageList: ArrayList<Message>
     private var currentUserName: String = ""
     private var searchKeyword: String = ""
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var recyclerView: RecyclerView
+
+
+    private val viewModel: MessageViewModel by viewModels()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,33 +62,35 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 초기화
-        messageList = ArrayList()
-        messageAdapter = MessageAdapter(this, messageList)
 
-
-        // recyclerView
-        binding.recyclerChat.layoutManager = LinearLayoutManager(this)
-        binding.recyclerChat.adapter = messageAdapter
+        // 이전 화면에서 가져오기
+        val intent = intent
+        val teamName = intent.getStringExtra("TeamName")
+        val teamCode = intent.getStringExtra("TeamCode").toString()
+        val userList = mutableListOf<String>()
 
 
         // 인스턴스 초기화
         mAuth = Firebase.auth
         mDbref = Firebase.database.reference
 
-        // 이전화면에서 가져오기
-        val intent = intent
-        val teamName = intent.getStringExtra("TeamName")
-        teamCode = intent.getStringExtra("TeamCode").toString()
+        // RecyclerView 설정
+        messageAdapter = MessageAdapter(this, ArrayList())
+        binding.recyclerChat.layoutManager = LinearLayoutManager(this)
+        binding.recyclerChat.adapter = messageAdapter
+
+        // LiveData를 관찰하여 UI 업데이트
+        viewModel.messageList.observe(this) { messages ->
+            messages?.let {
+                messageAdapter.updateMessages(it)
+                binding.recyclerChat.scrollToPosition(it.size - 1)
+            }
+        }
+
 
 
         val toolbar = binding.includeToolbar.toolbar
         val btnMenu = binding.includeToolbar.btnMenu
-        val btnSearch = binding.includeToolbar.btnSearch
-        btnSearch.setOnClickListener {
-            // 검색 다이얼로그 또는 검색 뷰를 표시
-            showSearchDialog()
-        }
         drawerLayout = binding.drawerLayout
         navView = binding.navView
 
@@ -103,7 +105,6 @@ class ChatActivity : AppCompatActivity() {
         val userNameTextView = headerView.findViewById<TextView>(R.id.tv_nav_userName)
         val userIdTextView = headerView.findViewById<TextView>(R.id.tv_nav_userEmail)
 
-        val userList = mutableListOf<String>()
         val currentUser = mAuth.currentUser
         val currentUid = currentUser?.uid ?: "" // 현재 user가 null일 경우가 생길 수가 있나 ?
         userIdTextView.text = currentUser?.email
@@ -153,54 +154,11 @@ class ChatActivity : AppCompatActivity() {
                 }
                 // userList = mutableListOf(receiverUid, currentUid)
                 userList.sort()
-                Log.d("rlrlr", "user list: $userList")
 
-                // 그룹 대화방 설정
-                val groupId = teamCode
-                val groupChatRoom = "group_$groupId"
+                // ViewModel 초기화
+                viewModel.init(teamCode, receiverUid, userList)
+                Log.d("ViewModelDebug", "teamcode: $teamCode, receiverUid: $receiverUid, userList: $userList")
 
-                // 그룹 채팅 메시지 전송
-                binding.btnSend.setOnClickListener {
-                    val message = binding.edtMessage.text.toString()
-                    if (message.trim().isNotEmpty()) { // 공백만 보내기는 안되게
-                        val timestamp = System.currentTimeMillis() // 현재 시간을 밀리초로 얻음
-                        val messageObject = Message(message, currentUid, currentUserName, timestamp)
-
-                        // 데이터 저장
-                        mDbref.child("Chats").child(groupChatRoom).child("messages").push()
-                            .setValue(messageObject).addOnSuccessListener {
-                                // 저장 성공시
-                                for (memberUid in userList) {
-                                    mDbref.child("Chats").child(groupChatRoom)
-                                        .child("user_$memberUid")
-                                        .child("messages").push().setValue(messageObject)
-                                }
-
-                            }
-                        binding.edtMessage.setText("") // 입력값 초기화
-                    }
-                }
-
-                // 메세지 가져오기
-                mDbref.child("Chats").child(groupChatRoom).child("messages")
-                    .addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            messageList.clear()
-
-                            for (postSnapshot in snapshot.children) {
-                                val message = postSnapshot.getValue(Message::class.java)
-                                messageList.add(message!!)
-                            }
-                            // 적용
-                            messageAdapter.notifyDataSetChanged()
-                            binding.recyclerChat.scrollToPosition(messageList.size - 1)
-                        }
-
-                        override fun onCancelled(databaseError: DatabaseError) {
-                            // 실패 처리
-                        }
-
-                    })
 
             }
 
@@ -210,6 +168,12 @@ class ChatActivity : AppCompatActivity() {
         })
 
 
+        // 메시지 전송 버튼 설정
+        binding.btnSend.setOnClickListener {
+            val message = binding.edtMessage.text.toString()
+            viewModel.sendMessage(message, currentUserName)
+            binding.edtMessage.setText("")
+        }
 
         // 툴바
         setSupportActionBar(toolbar) // toolbar를 액티비티의 액션바로 지정
@@ -257,45 +221,6 @@ class ChatActivity : AppCompatActivity() {
 
 
 
-    private fun showSearchDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("검색")
-
-        val editText = EditText(this)
-        builder.setView(editText)
-
-        builder.setPositiveButton("확인") { dialog, which ->
-            // 확인 버튼을 눌렀을 때의 처리
-            val searchKeyword = editText.text.toString()
-            //messageAdapter.filterByKeyword(searchKeyword)
-            if (!searchKeyword.isEmpty() && messageList.isNotEmpty()) {
-                val firstMatchingPosition = findFirstMatchingPosition(searchKeyword)
-                if (firstMatchingPosition != -1) {
-                    binding.recyclerChat.scrollToPosition(firstMatchingPosition)
-                    messageAdapter.notifyDataSetChanged()
-                }
-            }
-        }
-
-        builder.setNegativeButton("취소") { dialog, which ->
-            // 취소 버튼을 눌렀을 때의 처리
-        }
-
-        builder.show()
-    }
-    private fun findFirstMatchingPosition(keyword: String): Int {
-        for ((index, message) in messageList.withIndex()) {
-            if (message.message?.contains(keyword) == true) {
-                return index
-            }
-        }
-        return -1
-    }
-
-
-
-
 }
 
 
-// senderUid? currentUid? 객체이름 다시 생각해보기, 샌더와 리시버 나누기 ? 안 나누면 ?

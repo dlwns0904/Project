@@ -3,10 +3,13 @@ package com.example.plzlogin
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.plzlogin.databinding.DateReceiveBinding
+import com.example.plzlogin.databinding.DateSendBinding
+import com.example.plzlogin.databinding.ReceiveBinding
+import com.example.plzlogin.databinding.SendBinding
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -17,54 +20,69 @@ class MessageAdapter(private var context: Context, private var messageList: Arra
 
     private val receive = 1 // 받는 타입
     private val send = 2 // 보내는 타입
-    private val date = 3 // 날짜 표시 뷰 타입
-    private var searchKeyword: String = ""
+    private val dateSend = 3 // 날짜 표시 + 보내는 타입
+    private val dateReceive = 4 // 날짜 표시 + 받는 타입
 
+    private val currentUid = FirebaseAuth.getInstance().currentUser?.uid
+
+    class SendViewHolder(binding: SendBinding) : RecyclerView.ViewHolder(binding.root) {
+        val sendMessage: TextView = binding.tvSenderMessage
+        val sendTimestamp: TextView = binding.tvSenderTime
+    }
+    class ReceiveViewHolder(binding: ReceiveBinding) : RecyclerView.ViewHolder(binding.root) {
+        val receiveMessage: TextView = binding.tvReceiverMessage
+        val receiverName: TextView = binding.tvReceiver
+        val receiveTimestamp: TextView = binding.tvReceiverTime
+    }
+
+    class DateSendViewHolder(binding: DateSendBinding) : RecyclerView.ViewHolder(binding.root) {
+        val dateSendTextView: TextView = binding.tvDateS
+        val dateSenderMessage: TextView = binding.tvDateSenderMessage
+        val dateSenderTime: TextView = binding.tvDateSenderTime
+    }
+
+    class DateReceiveViewHolder(binding: DateReceiveBinding) : RecyclerView.ViewHolder(binding.root) {
+        val dateReceiveTextView: TextView = binding.tvDateR
+        val dateReceiveMessage: TextView = binding.tvDateReceiverMessage
+        val dateReceiverName: TextView = binding.tvDateReceiver
+        val dateReceiveTimestamp: TextView = binding.tvDateReceiverTime
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(context)
         return when (viewType) {
-            receive -> { // 받는 화면
-                val view: View =
-                    LayoutInflater.from(context).inflate(R.layout.receive, parent, false)
-                ReceiveViewHolder(view)
-            }
-
-            send -> { // 보내는 화면
-                val view: View = LayoutInflater.from(context).inflate(R.layout.send, parent, false)
-                SendViewHolder(view)
-            }
-
-            else -> { // 날짜 표시 뷰
-                val view: View = LayoutInflater.from(context).inflate(R.layout.date, parent, false)
-                DateViewHolder(view)
-            }
+            receive -> ReceiveViewHolder(ReceiveBinding.inflate(inflater, parent, false))
+            send -> SendViewHolder(SendBinding.inflate(inflater, parent, false))
+            dateSend -> DateSendViewHolder(DateSendBinding.inflate(inflater, parent, false))
+            dateReceive -> DateReceiveViewHolder(DateReceiveBinding.inflate(inflater, parent, false))
+            else -> throw IllegalArgumentException("Invalid viewType: $viewType")
         }
     }
 
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val currentMessage = messageList[position] // 현재 메세지
-        //Log.d("FilterDebug", "Search keyword: $searchKeyword, Message: ${currentMessage.message}")
+        val currentMessage = messageList[position]
 
-
-        if (holder.javaClass == DateViewHolder::class.java) {
-            Log.d("DateDebug", "holder is DateViewHolder")
-
-            val dateViewHolder = holder as DateViewHolder
-            dateViewHolder.dateTextView.text = getDate(currentMessage.timestamp)
-            Log.d("DateDebug", "포지션 ${position}에 날짜 바인딩 중")
-
-        } else {
-            // 보내는 데이터
-
-            if (holder.javaClass == SendViewHolder::class.java) {
-                val viewHolder = holder as SendViewHolder
-                viewHolder.sendMessage.text = currentMessage.message
-                viewHolder.sendTimestamp.text = getTime(currentMessage.timestamp)
-            } else { // 받는 데이터
-                val viewHolder = holder as ReceiveViewHolder
-                viewHolder.receiveMessage.text = currentMessage.message
+        when (holder) {
+            is DateSendViewHolder -> {
+                holder.dateSendTextView.text = getDate(currentMessage.timestamp)
+                holder.dateSenderMessage.text = currentMessage.message
+                holder.dateSenderTime.text = getTime(currentMessage.timestamp)
+            }
+            is SendViewHolder -> {
+                holder.sendMessage.text = currentMessage.message
+                holder.sendTimestamp.text = getTime(currentMessage.timestamp)
+            }
+            is DateReceiveViewHolder -> {
+                holder.dateReceiveTextView.text = getDate(currentMessage.timestamp)
+                holder.dateReceiveMessage.text = currentMessage.message
+                holder.dateReceiverName.text = currentMessage.senderName
+                holder.dateReceiveTimestamp.text = getTime(currentMessage.timestamp)
+            }
+            is ReceiveViewHolder -> {
+                holder.receiveMessage.text = currentMessage.message
                 holder.receiverName.text = currentMessage.senderName
-                viewHolder.receiveTimestamp.text = getTime(currentMessage.timestamp)
+                holder.receiveTimestamp.text = getTime(currentMessage.timestamp)
             }
         }
     }
@@ -77,15 +95,20 @@ class MessageAdapter(private var context: Context, private var messageList: Arra
     override fun getItemViewType(position: Int): Int {
         val currentMessage = messageList[position] // 메세지 값
         return if (isDateChanged(position)) {
-            date
+            if (currentUid == currentMessage.senderId) {
+                dateSend
+            } else {
+                dateReceive
+            }
         } else {
-            if (FirebaseAuth.getInstance().currentUser?.uid.equals(currentMessage.senderId)) {
+            if (currentUid == (currentMessage.senderId)) {
                 send
             } else {
                 receive
             }
         }
     }
+
 
     private fun isDateChanged(position: Int): Boolean {
         if (position == 0) { // 첫 번째 메세지는 항상 날짜가 바뀌는 것으로 처리
@@ -102,9 +125,6 @@ class MessageAdapter(private var context: Context, private var messageList: Arra
         val cal2 = Calendar.getInstance().apply {
             timeInMillis = previousMessage.timestamp ?: 0
         }
-        val dateChanged = !isSameDate(cal1, cal2)
-
-        Log.d("DateDebug", "날짜 변경됨: $dateChanged")
 
         return !isSameDate(cal1, cal2)
     }
@@ -114,25 +134,7 @@ class MessageAdapter(private var context: Context, private var messageList: Arra
                 && cal1[Calendar.DATE] == cal2[Calendar.DATE]
     }
 
-    // 보낸 쪽
-    class SendViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sendMessage: TextView = itemView.findViewById(R.id.tv_senderMessage)
-        val sendTimestamp: TextView =
-            itemView.findViewById(R.id.tv_senderTime) // 시간을 표시할 TextView 추가
-    }
 
-    // 받는 쪽
-    class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val receiveMessage: TextView = itemView.findViewById(R.id.tv_receiverMessage)
-        val receiverName: TextView = itemView.findViewById(R.id.tv_receiver)
-        val receiveTimestamp: TextView =
-            itemView.findViewById(R.id.tv_receiverTime) // 시간을 표시할 TextView 추가
-    }
-
-    // 날짜 표시 뷰홀더
-    class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val dateTextView: TextView = itemView.findViewById(R.id.tv_date)
-    }
 
     private fun getTime(timestamp: Long?): String {
         if (timestamp == null) return ""
@@ -155,6 +157,14 @@ class MessageAdapter(private var context: Context, private var messageList: Arra
 
         val sdf = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
         return sdf.format(calendar.time)
+    }
+
+
+
+    fun updateMessages(newMessages: List<Message>) {
+        messageList.clear()
+        messageList.addAll(newMessages)
+        notifyDataSetChanged()
     }
 
 
