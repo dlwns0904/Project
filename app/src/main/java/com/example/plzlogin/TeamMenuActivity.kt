@@ -32,17 +32,15 @@ class TeamMenuActivity : AppCompatActivity() {
 
 
         // 채팅 눌렀을 때
-        // 추가해줘 >> 완료
         binding.btnChat.setOnClickListener {
             val intent = Intent(this,ChatActivity::class.java)
             intent.putExtra("TeamName", teamName)
             intent.putExtra("TeamCode", teamCode)
             startActivity(intent)
         }
-        // 게시판 눌렀을 때
-        // 추가해줘
-        binding.btnBoard.setOnClickListener {
-            val intent: Intent = Intent(this@TeamMenuActivity,Vote::class.java)
+        // 파일 눌렀을 때
+        binding.btnFile.setOnClickListener {
+            val intent: Intent = Intent(this@TeamMenuActivity,FileActivity::class.java)
             startActivity(intent)
         }
 
