@@ -35,7 +35,6 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
 
         return holder
     }
-    // 실제 리스트의 개수를 반환
     override fun getItemCount(): Int {
         // 사이즈 null헤야해 안하면 오류
         return teamViewModel.teamlist.value?.size ?: 0
@@ -45,8 +44,6 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
     override fun onBindViewHolder(holder: TeamHolder, position: Int) {
 
         val team = teamViewModel.teamlist.value?.get(position)
-
-
         mAuth = Firebase.auth
         mDbref = Firebase.database.reference
 
@@ -57,8 +54,6 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
 
         // 팀 이름이 수정이 되면 모든 팀원 팀 이름이 수정되어야 하기 때문에
         // 팀 이름을 가져 올 때 Team-TemaCode - TeamName에서 가져옴
-
-
 
         // 요거 viewModel로 넘겨줄 수 있지 않나
         val TeamNameRef = mDbref.child("Team").child(teamcode).child("TeamName")
@@ -75,7 +70,6 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
         }
         )
 
-
         // 이동액티비티
         holder.itemView.setOnClickListener {
             notifyDataSetChanged()
@@ -87,8 +81,6 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
             context.startActivity(intent)
         }
 
-
-
         holder.btnDel.setOnClickListener {
 
             mDbref.child("USER").child(uid).child(teamcode).removeValue()
@@ -97,12 +89,9 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
             notifyDataSetChanged()
             Toast.makeText(context,"팀이 삭제 되었습니다",Toast.LENGTH_SHORT).show()
         }
-
-        // 이름 수정
         // Frag로 팀코드 보내줘야 함
         holder.btnRename.setOnClickListener {
 
-            // 숫자를 왜 안가지고 오니?
             val ReNameFrag : RenameFrag = RenameFrag()
             val bundle : Bundle = Bundle()
             bundle.putString("TeamCode",teamcode)
@@ -111,9 +100,7 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
 
             val frag = (context as menu).supportFragmentManager.beginTransaction()
             frag.replace(R.id.Menufrag, ReNameFrag).commit()
-
             notifyDataSetChanged()
-            // 토스트 메세지도 추가?
         }
     }
 
@@ -123,6 +110,5 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
         val TeamnameText : TextView = binding.txtTeamName1
         val btnDel : Button = binding.btnDelete
         val btnRename : Button = binding.btnRename
-
     }
 }

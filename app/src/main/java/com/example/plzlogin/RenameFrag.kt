@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.plzlogin.databinding.FragmentRenameBinding
 import com.example.plzlogin.repository.TeamRepository
-
+// ReNameFrag도 수정해야해
 
 class RenameFrag : Fragment() {
 

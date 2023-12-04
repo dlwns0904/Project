@@ -1,11 +1,10 @@
 package com.example.plzlogin
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.CalendarView
-import com.example.plzlogin.databinding.ActivityMenuBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.example.plzlogin.databinding.ActivityTeamMenuBinding
 
 class TeamMenuActivity : AppCompatActivity() {
@@ -55,6 +54,8 @@ class TeamMenuActivity : AppCompatActivity() {
             //시간 선택
             binding.CalTxt.setOnClickListener {
                 val intent : Intent = Intent(this@TeamMenuActivity,TimeSelect::class.java)
+                
+
                 intent.putExtra("Date", date)
                 intent.putExtra("TeamCode", teamCode)
                 startActivity(intent)
@@ -62,7 +63,7 @@ class TeamMenuActivity : AppCompatActivity() {
 
             binding.btnMeet.setOnClickListener {
                 val intent : Intent = Intent(this@TeamMenuActivity,MeetConfirm::class.java)
-                intent.putExtra("Date", date)
+                intent.putExtra("Date", "${year}${month+1}${dayOfMonth}")
                 intent.putExtra("TeamCode", teamCode)
                 startActivity(intent)
             }

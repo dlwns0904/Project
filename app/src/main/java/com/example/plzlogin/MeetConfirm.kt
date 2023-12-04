@@ -1,8 +1,8 @@
 package com.example.plzlogin
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.example.plzlogin.databinding.ActivityMeetConfirmBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -43,7 +43,11 @@ class MeetConfirm : AppCompatActivity() {
             val meetEnd = binding.txtMeetEnd.text.toString()
             val meetPlace = binding.txtMeetPlace.text.toString()
 
-            meetdateRef.child(meetTitle).setValue(Meet(meetStart, meetEnd, meetPlace))
+
+
+            // 저장하는 방식 살짝 수정
+            meetdateRef.setValue(Meet(meetTitle,meetStart,meetEnd,meetPlace))
+            /*meetdateRef.child(meetTitle).setValue(Meet(meetStart, meetEnd, meetPlace))*/
             finish()
         }
     }
