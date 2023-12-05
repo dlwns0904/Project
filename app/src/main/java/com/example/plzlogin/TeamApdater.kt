@@ -40,39 +40,16 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
     // 데이터 연결
     override fun onBindViewHolder(holder: TeamHolder, position: Int) {
 
+
         val team = teamViewModel.teamlist.value?.get(position)
-        mAuth = Firebase.auth
-        mDbref = Firebase.database.reference
-
-        /*val uid = mAuth.currentUser?.uid!!*/
-
         val teamcode = team?.teamCode.toString()
         val teamName = team?.teamName
 
-        /*var teamName: String? = null*/
-
-        // 팀 이름이 수정이 되면 모든 팀원 팀 이름이 수정되어야 하기 때문에
-        // 팀 이름을 가져 올 때 Team-TemaCode - TeamName에서 가져옴
-
-        // 요거 viewModel로 넘겨줄 수 있지 않나
+        mAuth = Firebase.auth
+        mDbref = Firebase.database.reference
 
         holder.TeamnameText.text = team?.teamName
 
-        /*val TeamNameRef = mDbref.child("Team").child(teamcode).child("TeamName")
-        TeamNameRef.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(dataSnapshot: DataSnapshot){
-                val teamname = dataSnapshot.value as String?
-                holder.TeamnameText.text = teamname
-                teamName = teamname
-
-            }
-            override fun onCancelled(error: DatabaseError) {
-                // 오류 처리를 여기에 추가
-            }
-        }
-        )*/
-
-        // 이동액티비티
         holder.itemView.setOnClickListener {
             notifyDataSetChanged()
             val intent = Intent(context,TeamMenuActivity::class.java)
@@ -84,14 +61,11 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
         }
 
         holder.btnDel.setOnClickListener {
-            //요거 삭제해도 되는지 보자
-
             teamViewModel.removeTeam( teamcode )
             notifyDataSetChanged()
             Toast.makeText(context,"팀이 삭제 되었습니다",Toast.LENGTH_SHORT).show()
         }
 
-        // Frag로 팀코드 보내줘야 함
         holder.btnRename.setOnClickListener {
 
             val ReNameFrag : RenameFrag = RenameFrag()
@@ -108,7 +82,6 @@ class TeamApdater(private val context: Context, private val teamViewModel: TeamV
 
     class TeamHolder(private val binding : ListTeamsBinding/*itemView: ListTeamsBinding*/)
         : RecyclerView.ViewHolder(binding.root/*itemView*/){
-
         val TeamnameText : TextView = binding.txtTeamName1
         val btnDel : Button = binding.btnDelete
         val btnRename : Button = binding.btnRename

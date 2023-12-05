@@ -9,17 +9,13 @@ import androidx.fragment.app.Fragment
 import com.example.plzlogin.databinding.FragmentRenameBinding
 import com.example.plzlogin.viewmodel.TeamViewModel
 
-// ReNameFrag도 수정해야해
-
 class RenameFrag : Fragment() {
 
     private val teamViewModel = TeamViewModel()
     lateinit var binding : FragmentRenameBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         binding = FragmentRenameBinding.inflate(inflater, container, false)
         val view = binding.root
 

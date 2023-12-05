@@ -15,20 +15,15 @@ class CreateFrag : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_create, container, false)
-        binding = FragmentCreateBinding.bind(view) // 이 부분을 수정
+        binding = FragmentCreateBinding.bind(view)
 
         val teamCode = teamViewModel.RandomNumber()
-        // 팀 코드 보여주고
         binding.Teamnum.text = teamCode
 
-        // 팀생성
         binding.btnTeamCreate.setOnClickListener {
             // ui관련된 코드는 view에 있어야 한다
-            // binding넘겨주면 안돼
-            // teamVeiwModel.creaTeam() 을 해서 res에서 다시 createTeam()
             val teamName = binding.edtTeam.text.toString().trim()
             teamViewModel.createTeam(teamName, teamCode)
-
 
             // viewmodel livedata observe해서 바뀌는 것
             val Frag = requireActivity().supportFragmentManager.beginTransaction()

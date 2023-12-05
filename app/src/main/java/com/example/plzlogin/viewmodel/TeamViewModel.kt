@@ -22,14 +22,14 @@ class TeamViewModel : ViewModel() {
         // 어떻게 view를 바꾸는지에 대한 코드
     }
 
-    fun createTeam(TeamName : String, TeamCode : String){
-        teamRepository.createTeam(TeamName,TeamCode)
-        teamRepository.addTeam(TeamName,TeamCode)
+    fun createTeam( teamName : String, teamCode : String ){
+        teamRepository.createTeam( teamName, teamCode )
+        teamRepository.addTeam( teamName, teamCode )
     }
 
-    fun joinTeam(TeamCode : String){
-        teamRepository.joinTeam(TeamCode)
-        teamRepository.joinaddTeam(TeamCode)
+    fun joinTeam( teamCode : String ){
+        teamRepository.joinTeam( teamCode )
+        teamRepository.joinaddTeam( teamCode )
     }
 
     fun existTeam(teamCode: String, callback: (Int) -> Unit) {
@@ -39,7 +39,7 @@ class TeamViewModel : ViewModel() {
     }
 
     fun reName(teamCode : String?, rename : String){
-        teamRepository.reName(teamCode, rename)
+        teamRepository.reName( teamCode, rename )
     }
 
     fun removeTeam( teamCode : String ){

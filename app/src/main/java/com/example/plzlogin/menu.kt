@@ -14,7 +14,6 @@ class menu : AppCompatActivity() {
     lateinit var binding : ActivityMenuBinding
     lateinit var adapter : TeamApdater
 
-
     private val teamViewModel = TeamViewModel()
     private lateinit var TeamList : ArrayList<Team>
 

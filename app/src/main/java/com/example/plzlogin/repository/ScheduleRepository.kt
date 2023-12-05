@@ -21,7 +21,7 @@ class ScheduleRepository {
 
 
     val meetlist : LiveData<List<Meet>> get() = _meetlist
-    fun observeSchedule(selectedDate: String) {
+    fun observeSchedule( selectedDate: String ) {
         val uid = mAuth.currentUser?.uid!!
         val teamRef = mDbref.child("USER").child(uid)
         val meetRef = mDbref.child("Meet")

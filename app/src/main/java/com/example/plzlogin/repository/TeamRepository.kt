@@ -13,10 +13,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
-// firebase를 통해서 가져오겠지
 class TeamRepository {
-    // 팀 코드 중복처리 해야하고
-
 
     private var mAuth: FirebaseAuth = Firebase.auth
     private var mDbref: DatabaseReference = Firebase.database.reference
@@ -29,6 +26,7 @@ class TeamRepository {
     // 화면에
     val teamList: LiveData<List<Team>> get() = _teamlist
 
+    // observeTeam 파라미터로 팀리스트를 넘겨주고 그 팀리스트의 teamlist.value = teams하면 되겠네
     // 팀리스트를 파라미터로 옮겨야 한다
     fun observeTeam() {
         val uid = mAuth.currentUser?.uid!!
@@ -44,35 +42,32 @@ class TeamRepository {
                 }
                 _teamlist.value = teams
             }
-
             override fun onCancelled(error: DatabaseError) {
-
             }
         })
     }
 
 
-    fun createTeam(TeamName: String, TeamCode: String) {
-        val TeamRef = mDbref.child("Team").child(TeamCode)
+    fun createTeam( teamName: String, teamCode: String ) {
+        val teamRef = mDbref.child("Team").child(teamCode)
 
-        TeamRef.get().addOnCompleteListener { task ->
+        teamRef.get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                TeamRef.setValue(TeamCode)
-                TeamRef.child("TeamName").setValue(TeamName)
+                teamRef.setValue(teamCode)
+                teamRef.child("TeamName").setValue(teamName)
 
                 // DB에서 user에 저장된 name을 가져와
                 val UsernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
                 UsernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val Username = dataSnapshot.value as String?
-                        TeamRef.child(mAuth.currentUser?.uid!!).setValue(
+                        teamRef.child(mAuth.currentUser?.uid!!).setValue(
                             CreateFrag.User(
                                 Username,
                                 mAuth.currentUser?.uid!!
                             )
                         )
                     }
-
                     override fun onCancelled(databaseError: DatabaseError) {
                     }
                 })
@@ -85,22 +80,20 @@ class TeamRepository {
 
 
     // 내 uid에 팀 코드랑 팀 이름 추가
-    fun addTeam(TeamName: String, TeamCode: String) {
+    fun addTeam( teamName: String, teamCode: String ) {
 
-        val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(TeamCode)
-        TeamRef.setValue(Team(TeamName, TeamCode))
+        val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(teamCode)
+        TeamRef.setValue(Team( teamName, teamCode ))
     }
 
-    // context 받아서 그냥 바로 Toast메세지 실행시키게 함
-    // 일반 반환 불가 addOnCompleteListener가 비동기적이라 callback 사용해서 해야해
+    // addOnCompleteListener가 비동기적이라 callback 사용해서 해야해
 
-    fun existTeam(teamCode: String, callback: (Int) -> Unit) {
+    fun existTeam( teamCode: String, callback: (Int) -> Unit ) {
         if (teamCode.length != 6) {
             // 이걸 어떻게 해야할까?
             callback(0)
             return
         }
-
         val teamRef = mDbref.child("Team")
         teamRef.child(teamCode).get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -115,56 +108,35 @@ class TeamRepository {
         }
     }
 
+    fun joinTeam( teamCode : String ){
 
-    /*fun existTeam(teamCode : String) {
-        if (teamCode.length != 6) {
-            // 이걸 어떻게 해야할까?
-            return 0
-        }
+        val teamRef = mDbref.child("Team").child(teamCode)
+        val usernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
 
-        val teamRef = mDbref.child("Team")
-        teamRef.child(teamCode).get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val dataSnapshot = task.result
-
-                if (dataSnapshot.exists()) return 1
-                else return 2
-            }
-        }
-    }*/
-
-    fun joinTeam(TeamCode : String){
-
-        val TeamRef = mDbref.child("Team").child(TeamCode)
-        // 이름 가지고 오기
-        val UsernameRef = mDbref.child("user").child(mAuth.currentUser?.uid!!).child("name")
-
-        UsernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        usernameRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val Username = dataSnapshot.value as String?
-                TeamRef.child(mAuth.currentUser?.uid!!).setValue(
+                teamRef.child(mAuth.currentUser?.uid!!).setValue(
                     CreateFrag.User(Username, mAuth.currentUser?.uid!!)
                 )
             }
             override fun onCancelled(databaseError: DatabaseError) {
-                // 실패
-                /*Toast.makeText(requireContext(), "데이터를 가져오는 중 오류 발생", Toast.LENGTH_SHORT).show()*/
             }
         })
     }
 
 
-    fun joinaddTeam(TeamCode: String){
-        // 팀 네임을 가져 와야 겠지?
-        val TeamRef = mDbref.child("Team").child(TeamCode).child("TeamName")
+    fun joinaddTeam( teamCode : String ){
 
-        TeamRef.addListenerForSingleValueEvent( object : ValueEventListener{override fun onDataChange(dataSnapshot: DataSnapshot) {
+        val teamRef = mDbref.child("Team").child(teamCode).child("TeamName")
 
-            val TeamName = dataSnapshot.value as String?
-            val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(TeamCode)
+        teamRef.addListenerForSingleValueEvent( object : ValueEventListener{override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+            val teamName = dataSnapshot.value as String?
+            val teamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(teamCode)
 
             // 팀 네임 , 팀 코드 DB에 저장
-            TeamRef.setValue(Team(TeamName,TeamCode))
+            teamRef.setValue( Team( teamName,teamCode) )
         }
             override fun onCancelled(databaseError: DatabaseError) {
             }
@@ -173,7 +145,7 @@ class TeamRepository {
 
     // 이름 수정
     // 널 체크 왜? ReNameFrag에서 TeamApdater의 agrument로 teamcode가져오는데 이게 널일 수도 있으니까 string? 으로 받고 널체크
-    fun reName(teamCode : String?, rename : String){
+    fun reName( teamCode : String?, rename : String ){
         if (teamCode != null) {
             // 널 체크
             val uid = mAuth.currentUser?.uid!!

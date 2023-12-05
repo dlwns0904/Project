@@ -16,7 +16,6 @@ class JoinFrag : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_join, container, false)
-
         binding = FragmentJoinBinding.bind(view)
 
         binding.btnJoin.setOnClickListener {
@@ -26,10 +25,12 @@ class JoinFrag : Fragment() {
             // context에 연결되어 있는지 확인하고
             context?.let {
                 teamViewModel.existTeam(teamCode) { result ->
+
                     when (result) {
                         0 -> Toast.makeText(it, "6자리 숫자를 입력해주세요", Toast.LENGTH_SHORT).show()
                         1 -> teamViewModel.joinTeam(teamCode)
                         2 -> Toast.makeText(it, "팀이 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
+
                     }
                 }
             }

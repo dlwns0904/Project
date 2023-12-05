@@ -13,7 +13,7 @@
 
         val meetlist : LiveData<List<Meet>> get() = _meetlist
 
-        fun observeSchedule(selectedDate: String) {
+        fun observeSchedule( selectedDate: String ) {
             scheduleRepository.observeSchedule(selectedDate)
         }
     }

@@ -18,8 +18,6 @@ class ScheduleAdapter(private val context : Context, private val scheduleViewMod
 
     override fun onBindViewHolder(holder: ScheduleHolder, position: Int) {
         var schedule = scheduleViewModel.meetlist.value?.get(position)
-
-        // Ensure that binding is not null
         holder.purpose.text = schedule?.meetTitle
         holder.starttime.text = schedule?.startTime
         holder.endtime.text = schedule?.endTime
