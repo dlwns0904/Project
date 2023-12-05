@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plzlogin.databinding.ListTimesBinding
 
-class TimesAdapater(val times: List<Time>): RecyclerView.Adapter<TimesAdapater.Holder>() {
+class TimesAdapater(private var times: List<Time>): RecyclerView.Adapter<TimesAdapater.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = ListTimesBinding.inflate(LayoutInflater.from(parent.context))
@@ -26,5 +26,10 @@ class TimesAdapater(val times: List<Time>): RecyclerView.Adapter<TimesAdapater.H
             binding.checkTime.setOnCheckedChangeListener { _, isChecked -> time.selected = isChecked
             }
         }
+    }
+
+    fun setTime(newTimes: List<Time>) {
+        times = newTimes
+        notifyDataSetChanged()
     }
 }
