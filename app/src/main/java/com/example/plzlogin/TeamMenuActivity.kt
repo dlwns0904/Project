@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.CalendarView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.plzlogin.databinding.ActivityTeamMenuBinding
+import com.example.plzlogin.viewmodel.TeamMenuViewModel
+import androidx.recyclerview.widget.LinearLayoutManager
 
 class TeamMenuActivity : AppCompatActivity() {
 
@@ -17,6 +20,8 @@ class TeamMenuActivity : AppCompatActivity() {
 
 
     lateinit var binding : ActivityTeamMenuBinding
+    private val viewModel: TeamMenuViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +34,9 @@ class TeamMenuActivity : AppCompatActivity() {
         val teamCode = intent.getStringExtra("TeamCode")
         val toolbar3 = binding.toolbar3
 
+        val datesAdapater = DateAdapter(listOf())
+        binding.recDates.layoutManager = LinearLayoutManager(this)
+        binding.recDates.adapter = datesAdapater
 
         // 채팅 눌렀을 때
         binding.btnChat.setOnClickListener {
@@ -48,7 +56,11 @@ class TeamMenuActivity : AppCompatActivity() {
         cal.minDate = System.currentTimeMillis()
         cal.maxDate = System.currentTimeMillis() + 864000000
         cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            var date = "${year}년${month + 1}월${dayOfMonth}일"
+            val date = "${year}년${month + 1}월${dayOfMonth}일"
+            viewModel.loadDates(teamCode!!, date)
+            viewModel.dates.observe(this) {dates ->
+                datesAdapater.setDate(dates)
+            }
             binding.CalTxt.text = "${date} 시간 선택"
             binding.btnMeet.text = "${date} 회의 일정"
             //시간 선택
@@ -66,9 +78,14 @@ class TeamMenuActivity : AppCompatActivity() {
                 intent.putExtra("Date", "${year}${month+1}${dayOfMonth}")
                 intent.putExtra("TeamCode", teamCode)
                 startActivity(intent)
+
             }
+
         }
 
+        viewModel.dates.observe(this) {dates ->
+            datesAdapater.setDate(dates)
+        }
 
         setSupportActionBar(toolbar3)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

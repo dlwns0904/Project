@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/checkbox14"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox13"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox13"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox12"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox12"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox11"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox11"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox10"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox9"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox9"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox8"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox8"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox7"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox7"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox6"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox5"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox4"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox3"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <ImageView
+        android:id="@+id/checkbox2"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkbox1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="64dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/checkbox1"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/white_square" />
+</androidx.constraintlayout.widget.ConstraintLayout>

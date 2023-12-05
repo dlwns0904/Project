@@ -58,5 +58,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rec_dates"
+        android:layout_width="468dp"
+        android:layout_height="169dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/Cal"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:textSize = "12sp"
+        android:text="8 9 10 11 12 13 14 15 16 17 18 19 20 21 22"
+        app:layout_constraintBottom_toTopOf="@+id/rec_dates"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
