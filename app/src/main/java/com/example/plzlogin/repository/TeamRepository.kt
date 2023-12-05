@@ -18,10 +18,10 @@ class TeamRepository {
     // 팀 코드 중복처리 해야하고
 
 
-    private var mAuth : FirebaseAuth = Firebase.auth
-    private var mDbref : DatabaseReference = Firebase.database.reference
+    private var mAuth: FirebaseAuth = Firebase.auth
+    private var mDbref: DatabaseReference = Firebase.database.reference
 
-    private val _teamlist = MutableLiveData<List<Team>>() //여기서 가지고 있으면 안되
+    private val _teamlist = MutableLiveData<List<Team>>() //여기서 가지고 있으면 안돼
     // viewModel로 옮기고
 
     // 어떤 db에 의해서 바뀌는 db?
@@ -30,9 +30,7 @@ class TeamRepository {
     val teamList: LiveData<List<Team>> get() = _teamlist
 
     // 팀리스트를 파라미터로 옮겨야 한다
-    fun observeTeam(){
-        // addValue말고 child가 change되면
-        // add가 성공했습니다
+    fun observeTeam() {
         val uid = mAuth.currentUser?.uid!!
         val teamref = mDbref.child("USER").child(uid)
         teamref.addValueEventListener(object : ValueEventListener {
@@ -41,7 +39,8 @@ class TeamRepository {
                 for (postsnapshot in snapshot.children) {
                     val team = postsnapshot.getValue(Team::class.java)
                     team?.let {
-                        teams.add(it) }
+                        teams.add(it)
+                    }
                 }
                 _teamlist.value = teams
             }
@@ -52,16 +51,12 @@ class TeamRepository {
         })
     }
 
-    // 요거 다르게 수정해야하고
 
-    // 팀 생성
-    // 요거 바인딩 없애고
-    fun createTeam( TeamName : String, TeamCode: String) {
+    fun createTeam(TeamName: String, TeamCode: String) {
         val TeamRef = mDbref.child("Team").child(TeamCode)
 
         TeamRef.get().addOnCompleteListener { task ->
-            if (task.isSuccessful)
-            {
+            if (task.isSuccessful) {
                 TeamRef.setValue(TeamCode)
                 TeamRef.child("TeamName").setValue(TeamName)
 
@@ -77,6 +72,7 @@ class TeamRepository {
                             )
                         )
                     }
+
                     override fun onCancelled(databaseError: DatabaseError) {
                     }
                 })
@@ -88,21 +84,21 @@ class TeamRepository {
     //
 
 
-
-
     // 내 uid에 팀 코드랑 팀 이름 추가
-    fun addTeam( TeamName: String, TeamCode: String){
+    fun addTeam(TeamName: String, TeamCode: String) {
 
         val TeamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(TeamCode)
-        TeamRef.setValue(Team(TeamName,TeamCode))
+        TeamRef.setValue(Team(TeamName, TeamCode))
     }
 
     // context 받아서 그냥 바로 Toast메세지 실행시키게 함
     // 일반 반환 불가 addOnCompleteListener가 비동기적이라 callback 사용해서 해야해
-    fun existTeam(teamCode : String) {
-        if (teamCode.length != 6) {
 
-            /*Toast.makeText(context, "6자리 숫자를 입력해주세요", Toast.LENGTH_SHORT).show()*/
+    fun existTeam(teamCode: String, callback: (Int) -> Unit) {
+        if (teamCode.length != 6) {
+            // 이걸 어떻게 해야할까?
+            callback(0)
+            return
         }
 
         val teamRef = mDbref.child("Team")
@@ -110,11 +106,32 @@ class TeamRepository {
             if (task.isSuccessful) {
                 val dataSnapshot = task.result
 
-                // 데이터 있으면 팀 참가해주고
-                /*if (dataSnapshot.exists())*/
+                if (dataSnapshot.exists()) {
+                    callback(1)
+                } else {
+                    callback(2)
+                }
             }
         }
     }
+
+
+    /*fun existTeam(teamCode : String) {
+        if (teamCode.length != 6) {
+            // 이걸 어떻게 해야할까?
+            return 0
+        }
+
+        val teamRef = mDbref.child("Team")
+        teamRef.child(teamCode).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val dataSnapshot = task.result
+
+                if (dataSnapshot.exists()) return 1
+                else return 2
+            }
+        }
+    }*/
 
     fun joinTeam(TeamCode : String){
 
@@ -163,5 +180,11 @@ class TeamRepository {
             mDbref.child("USER").child(uid).child(teamCode).child("teamName").setValue(rename)
             mDbref.child("Team").child(teamCode).child("TeamName").setValue(rename)
         }
+    }
+
+    fun removeTeam( teamCode : String ){
+        val uid = mAuth.currentUser?.uid!!
+        mDbref.child("USER").child(uid).child(teamCode).removeValue()
+        mDbref.child("Team").child(teamCode).child(uid).removeValue()
     }
 }

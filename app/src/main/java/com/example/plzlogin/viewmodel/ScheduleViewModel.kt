@@ -9,14 +9,11 @@
 
         private val scheduleRepository : ScheduleRepository = ScheduleRepository()
 
-        private val _schedulelist = scheduleRepository.schedulelist
+        private val _meetlist = scheduleRepository.meetlist
 
-        val schedulelist : LiveData<List<Meet>> get() = _schedulelist
-        init{
-            loadschedule("20231130")
-        }
+        val meetlist : LiveData<List<Meet>> get() = _meetlist
 
-        fun loadschedule(date : String){
-            scheduleRepository.obverseSchedule(date)
+        fun observeSchedule(selectedDate: String) {
+            scheduleRepository.observeSchedule(selectedDate)
         }
     }

@@ -12,17 +12,14 @@ class ScheduleAdapter(private val context : Context, private val scheduleViewMod
     : RecyclerView.Adapter<ScheduleAdapter.ScheduleHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleHolder {
-        val binding = ListScheduleBinding.inflate(LayoutInflater.from(parent.context))
-        val holder = ScheduleHolder(binding)
-
-        return holder
+        val binding = ListScheduleBinding.inflate(LayoutInflater.from(context), parent, false)
+        return ScheduleHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ScheduleHolder, position: Int) {
+        var schedule = scheduleViewModel.meetlist.value?.get(position)
 
-        val schedule = scheduleViewModel.schedulelist.value?.get(position)
-
-
+        // Ensure that binding is not null
         holder.purpose.text = schedule?.meetTitle
         holder.starttime.text = schedule?.startTime
         holder.endtime.text = schedule?.endTime
@@ -30,11 +27,10 @@ class ScheduleAdapter(private val context : Context, private val scheduleViewMod
     }
 
     override fun getItemCount(): Int {
-        return scheduleViewModel.schedulelist.value?.size ?: 0
+        return scheduleViewModel.meetlist.value?.size ?: 0
     }
 
-
-    class ScheduleHolder(private val binding : ListScheduleBinding)
+    class ScheduleHolder(val binding : ListScheduleBinding)
         : RecyclerView.ViewHolder(binding.root){
 
         val purpose : TextView = binding.txtPurpose

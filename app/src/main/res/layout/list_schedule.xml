@@ -24,33 +24,51 @@
 
             <TextView
                 android:id="@+id/txt_purpose"
-                android:layout_width="100dp"
-                android:layout_height="57dp"
-                android:text="TextView" />
+                android:layout_width="182dp"
+                android:layout_height="56dp"
+                android:text="TextView"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="3dp" />
 
             <TextView
                 android:id="@+id/txt_starttime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/txt_purpose"
-                tools:layout_editor_absoluteY="19dp" />
+                android:textColor="#3F51B5"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/txt_endtime"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/txt_endtime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
                 android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/txt_starttime"
-                tools:layout_editor_absoluteY="19dp" />
+                android:textColor="#3F51B5"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/txt_place"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
                 android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/txt_purpose"
-                tools:layout_editor_absoluteY="0dp" />
+                android:textSize="25dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.759" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

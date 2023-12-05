@@ -12,41 +12,125 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
+
 class ScheduleRepository {
     private var mAuth : FirebaseAuth = Firebase.auth
     private var mDbref : DatabaseReference = Firebase.database.reference
 
-    private val _schedulelist = MutableLiveData<List<Meet>>(emptyList())
+    private val _meetlist = MutableLiveData<List<Meet>>()
 
-    val schedulelist : LiveData<List<Meet>> get() = _schedulelist
-    // 내가 들어가있는 팀을 가져오고 데이터 가져오는 것을 log.d로 해서
-    fun obverseSchedule( date : String){
+
+    val meetlist : LiveData<List<Meet>> get() = _meetlist
+    fun observeSchedule(selectedDate: String) {
+        val uid = mAuth.currentUser?.uid!!
+        val teamRef = mDbref.child("USER").child(uid)
+        val meetRef = mDbref.child("Meet")
+
+        teamRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val meets = mutableListOf<Meet>()
+
+                for (postSnapshot in snapshot.children) {
+                    val teamCode = postSnapshot.key
+
+                    if (teamCode != null) {
+                        meetRef.child(teamCode).addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(scheduleSnapshot: DataSnapshot) {
+                                for (scheduleChildSnapshot in scheduleSnapshot.children) {
+                                    val meet = scheduleChildSnapshot.getValue(Meet::class.java)
+
+                                    // meetdate가 선택한 날짜와 같은지 확인
+                                    if (meet?.meetdate == selectedDate) {
+                                        meet?.let {
+                                            meets.add(it)
+                                        }
+                                    }
+                                }
+                                _meetlist.value = meets
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                // 에러 처리
+                            }
+                        })
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // 에러 처리
+            }
+        })
+    }
+
+
+    /*fun obverseSchedule() {
         val uid = mAuth.currentUser?.uid!!
         val teamref = mDbref.child("USER").child(uid)
-        val scheduleref = mDbref.child("Meet")
+        val meetref = mDbref.child("Meet")
 
         teamref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val schedules = mutableListOf<Meet>()
+                val meets = mutableListOf<Meet>()
+
+                for (postsnapshot in snapshot.children) {
+                    val teamCode = postsnapshot.key
+
+                    if (teamCode != null) {
+                        meetref.child(teamCode).addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(snap_shot: DataSnapshot) {
+                                for (post_snapshot in snap_shot.children) {
+                                    val meet = post_snapshot.getValue(Meet::class.java)
+                                    meet?.let {
+                                        meets.add(it)
+                                    }
+                                }
+                                // 데이터를 한 번에 업데이트
+                                _meetlist.value = meets
+
+                            }
+                            override fun onCancelled(error: DatabaseError){
+                            }
+                        })
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // 에러 처리
+            }
+        })
+    }*/
+
+
+    /*fun obverseSchedule(){
+        val uid = mAuth.currentUser?.uid!!
+        val teamref = mDbref.child("USER").child(uid)
+        val meetref = mDbref.child("Meet")
+
+        teamref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val meets = mutableListOf<Meet>()
                 for ( postsnapshot in snapshot.children){
                     // USER에 접근해서 postsnapshot이 teamCode를 가져와
                     // 이 가져온 팀코드를 이용해서
-                    scheduleref.child(postsnapshot.toString()).child(date).addValueEventListener(object : ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (postsnapshot in snapshot.children) {
-                            val schedule = postsnapshot.getValue(Meet::class.java)
-                            schedule?.let {
-                                schedules.add(it)
+                    meetref.child(postsnapshot.toString()).addValueEventListener(object : ValueEventListener{
+                        override fun onDataChange(snap_shot: DataSnapshot) {
+                            TODO("Not yet implemented")
+                            for ( post_snapshot in snap_shot.children){
+                                val meet = post_snapshot.getValue(Meet::class.java)
+                                meet?.let{
+                                    meets.add(it)
+                                }
+
                             }
                         }
-                    }
+                        _meetlist.value = meets
+
 
                         override fun onCancelled(error: DatabaseError) {
                             TODO("Not yet implemented")
                         }
                     })
                 }
-                _schedulelist.value = schedules
             }
 
 
@@ -54,7 +138,7 @@ class ScheduleRepository {
                 TODO("Not yet implemented")
             }
         })
-    }
+    }*/
    /* fun observeSchedule(date: String) {
         val uid = mAuth.currentUser?.uid!!
         val teamRef = mDbref.child("USER").child(uid).child("teams")

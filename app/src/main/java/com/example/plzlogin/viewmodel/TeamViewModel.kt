@@ -32,9 +32,21 @@ class TeamViewModel : ViewModel() {
         teamRepository.joinaddTeam(TeamCode)
     }
 
-    fun existTeam(teamCode : String){
-        teamRepository.existTeam(teamCode)
+    fun existTeam(teamCode: String, callback: (Int) -> Unit) {
+        teamRepository.existTeam(teamCode) { result ->
+            callback(result)
+        }
     }
+
+    fun reName(teamCode : String?, rename : String){
+        teamRepository.reName(teamCode, rename)
+    }
+
+    fun removeTeam( teamCode : String ){
+        teamRepository.removeTeam( teamCode )
+    }
+
+    // 이거 바꿔야 하고
     fun RandomNumber(): String {
         var Number = ""
         val Range = 0..9

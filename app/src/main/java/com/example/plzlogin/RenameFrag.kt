@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.plzlogin.databinding.FragmentRenameBinding
-import com.example.plzlogin.repository.TeamRepository
+import com.example.plzlogin.viewmodel.TeamViewModel
+
 // ReNameFrag도 수정해야해
 
 class RenameFrag : Fragment() {
 
-    private val teamRepository = TeamRepository()
+    private val teamViewModel = TeamViewModel()
     lateinit var binding : FragmentRenameBinding
 
     override fun onCreateView(
@@ -25,10 +26,11 @@ class RenameFrag : Fragment() {
         // 수정누르면 이름 변경 USER - uid - TeamCode - teamName Team - Teamcode - teamName
 
         binding.btnReName.setOnClickListener {
+
             val teamCode = arguments?.getString("TeamCode")
             val rename = binding.edtReTeamName.text.toString().trim()
 
-            teamRepository.reName(teamCode, rename)
+            teamViewModel.reName(teamCode, rename)
             Toast.makeText(context,"수정이 완료되었습니다",Toast.LENGTH_SHORT).show()
 
             val Frag = requireActivity().supportFragmentManager.beginTransaction()

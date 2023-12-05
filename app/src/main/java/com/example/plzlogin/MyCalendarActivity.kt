@@ -28,8 +28,9 @@ class MyCalendarActivity : AppCompatActivity() {
         binding.recSch.adapter = adapter2
 
         binding.Mycalendar.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val selectedDate = "${year}${String.format("%02d", month + 1)}${String.format("%02d", dayOfMonth)}"
-            scheduleViewModel.loadschedule(selectedDate)
+            val selectedDate = "${year}${String.format("%02d", month + 1)}${String.format("%d", dayOfMonth)}"
+            scheduleViewModel.observeSchedule(selectedDate)
+            adapter2.notifyDataSetChanged()
         }
 
         binding.btnBack.setOnClickListener {
@@ -37,9 +38,10 @@ class MyCalendarActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        scheduleViewModel.schedulelist.observe(this) { schedules ->
+        scheduleViewModel.meetlist.observe(this) { meets ->
+
             schedulelist.clear()
-            schedulelist.addAll(schedules)
+            schedulelist.addAll(meets)
             adapter2.notifyDataSetChanged()
         }
     }

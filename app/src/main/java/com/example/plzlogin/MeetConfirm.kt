@@ -38,15 +38,16 @@ class MeetConfirm : AppCompatActivity() {
         val meetdateRef = mDbref.child("Meet").child(teamCode).child(date)
         //버튼 눌렀을 때 정보 저장
         binding.btnMeetsave.setOnClickListener {
+            val meetdate = date
             val meetTitle = binding.txtMeetTitle.text.toString()
             val meetStart = binding.txtMeetStart.text.toString()
             val meetEnd = binding.txtMeetEnd.text.toString()
             val meetPlace = binding.txtMeetPlace.text.toString()
 
-
+            // 저장할 때 meetdate까지 저장하도로 수정해봤어 12/02ㅅ
 
             // 저장하는 방식 살짝 수정
-            meetdateRef.setValue(Meet(meetTitle,meetStart,meetEnd,meetPlace))
+            meetdateRef.setValue(Meet(meetdate,meetTitle,meetStart,meetEnd,meetPlace))
             /*meetdateRef.child(meetTitle).setValue(Meet(meetStart, meetEnd, meetPlace))*/
             finish()
         }
