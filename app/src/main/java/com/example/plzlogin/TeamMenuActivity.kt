@@ -44,7 +44,7 @@ class TeamMenuActivity : AppCompatActivity() {
         }
 
         //날짜 선택
-        var cal : CalendarView = findViewById(R.id.Cal)
+        var cal : CalendarView = binding.Cal
         cal.minDate = System.currentTimeMillis()
         cal.maxDate = System.currentTimeMillis() + 864000000
         cal.setOnDateChangeListener { view, year, month, dayOfMonth ->
