@@ -1,25 +1,24 @@
 package com.example.plzlogin.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.plzlogin.Team
 import com.example.plzlogin.repository.TeamRepository
+import kotlin.random.Random
 
 class TeamViewModel : ViewModel() {
 
     private val teamRepository : TeamRepository = TeamRepository()
-
-
-    // ober 할 떄 그냥 파라미터로 넘겨서
-    private val _teamlist = teamRepository.teamList
+    private val _teamlist = MutableLiveData<List<Team>>()
     val teamlist: LiveData<List<Team>> get() = _teamlist
     init{
         loadteam()
     }
     fun loadteam(){
-        teamRepository.observeTeam()
-        // teamlist를 viewModel에서 가져와야지
-        // 어떻게 view를 바꾸는지에 대한 코드
+        teamRepository.observeTeam { teams ->
+            _teamlist.value = teams
+        }
     }
 
     fun createTeam( teamName : String, teamCode : String ){
@@ -46,15 +45,12 @@ class TeamViewModel : ViewModel() {
         teamRepository.removeTeam( teamCode )
     }
 
-    // 이거 바꿔야 하고
     fun RandomNumber(): String {
-        var Number = ""
-        val Range = 0..9
-
+        var number = ""
         for (i in 0..5) {
-            val Addnum = Range.random()
-            Number += Addnum.toString()
+            val addNum = Random.nextInt(10)
+            number += addNum.toString()
         }
-        return Number
+        return number
     }
 }

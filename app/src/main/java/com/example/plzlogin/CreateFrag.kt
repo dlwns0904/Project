@@ -27,7 +27,7 @@ class CreateFrag : Fragment() {
 
             // viewmodel livedata observe해서 바뀌는 것
             val Frag = requireActivity().supportFragmentManager.beginTransaction()
-            Frag.remove(this) // this@CreateFrag
+            Frag.remove(this)
             Frag.commit()
         }
         return view

@@ -19,18 +19,15 @@ class JoinFrag : Fragment() {
         binding = FragmentJoinBinding.bind(view)
 
         binding.btnJoin.setOnClickListener {
-            // 입력한 팀 코드
             val teamCode = binding.edtTeamcode.text.toString().trim()
 
-            // context에 연결되어 있는지 확인하고
+            // context에 연결되어 있는지 확인해봐
             context?.let {
                 teamViewModel.existTeam(teamCode) { result ->
-
                     when (result) {
                         0 -> Toast.makeText(it, "6자리 숫자를 입력해주세요", Toast.LENGTH_SHORT).show()
                         1 -> teamViewModel.joinTeam(teamCode)
                         2 -> Toast.makeText(it, "팀이 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
-
                     }
                 }
             }

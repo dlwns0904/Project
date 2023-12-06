@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plzlogin.databinding.ActivityMenuBinding
 import com.example.plzlogin.viewmodel.TeamViewModel
 
-
 class menu : AppCompatActivity() {
 
     lateinit var binding : ActivityMenuBinding
@@ -22,13 +21,11 @@ class menu : AppCompatActivity() {
         binding = ActivityMenuBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 리스트 초기화
         TeamList = ArrayList()
         adapter = TeamApdater(this, teamViewModel)
 
         binding.recTeam.layoutManager = LinearLayoutManager(this)
         binding.recTeam.adapter = adapter
-
 
         teamViewModel.teamlist.observe(this) { teams ->
             TeamList.clear()

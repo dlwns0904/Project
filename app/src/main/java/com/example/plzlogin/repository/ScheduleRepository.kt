@@ -1,7 +1,5 @@
 package com.example.plzlogin.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.plzlogin.Meet
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -14,14 +12,11 @@ import com.google.firebase.database.database
 
 
 class ScheduleRepository {
+
     private var mAuth : FirebaseAuth = Firebase.auth
     private var mDbref : DatabaseReference = Firebase.database.reference
 
-    private val _meetlist = MutableLiveData<List<Meet>>()
-
-
-    val meetlist : LiveData<List<Meet>> get() = _meetlist
-    fun observeSchedule( selectedDate: String ) {
+    fun observeSchedule( selectedDate: String, callback : (List<Meet>) -> Unit ) {
         val uid = mAuth.currentUser?.uid!!
         val teamRef = mDbref.child("USER").child(uid)
         val meetRef = mDbref.child("Meet")
@@ -46,9 +41,8 @@ class ScheduleRepository {
                                         }
                                     }
                                 }
-                                _meetlist.value = meets
+                                callback(meets)
                             }
-
                             override fun onCancelled(error: DatabaseError) {
                                 // 에러 처리
                             }

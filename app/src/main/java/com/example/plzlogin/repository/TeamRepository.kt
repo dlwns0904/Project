@@ -1,7 +1,5 @@
 package com.example.plzlogin.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.plzlogin.CreateFrag
 import com.example.plzlogin.Team
 import com.google.firebase.Firebase
@@ -18,17 +16,7 @@ class TeamRepository {
     private var mAuth: FirebaseAuth = Firebase.auth
     private var mDbref: DatabaseReference = Firebase.database.reference
 
-    private val _teamlist = MutableLiveData<List<Team>>() //여기서 가지고 있으면 안돼
-    // viewModel로 옮기고
-
-    // 어떤 db에 의해서 바뀌는 db?
-    // res는 데이터 베이스가
-    // 화면에
-    val teamList: LiveData<List<Team>> get() = _teamlist
-
-    // observeTeam 파라미터로 팀리스트를 넘겨주고 그 팀리스트의 teamlist.value = teams하면 되겠네
-    // 팀리스트를 파라미터로 옮겨야 한다
-    fun observeTeam() {
+    fun observeTeam( callback : (List<Team>) -> Unit ) {
         val uid = mAuth.currentUser?.uid!!
         val teamref = mDbref.child("USER").child(uid)
         teamref.addValueEventListener(object : ValueEventListener {
@@ -40,7 +28,7 @@ class TeamRepository {
                         teams.add(it)
                     }
                 }
-                _teamlist.value = teams
+                callback(teams)
             }
             override fun onCancelled(error: DatabaseError) {
             }
@@ -74,10 +62,6 @@ class TeamRepository {
             }
         }
     }
-    // 파이어베이스에 만들라고 얘기를 하고
-    // 팀 생성해서 이제 리스트가 바뀌면 알려주는 것?
-    //
-
 
     // 내 uid에 팀 코드랑 팀 이름 추가
     fun addTeam( teamName: String, teamCode: String ) {
@@ -86,11 +70,8 @@ class TeamRepository {
         TeamRef.setValue(Team( teamName, teamCode ))
     }
 
-    // addOnCompleteListener가 비동기적이라 callback 사용해서 해야해
-
     fun existTeam( teamCode: String, callback: (Int) -> Unit ) {
         if (teamCode.length != 6) {
-            // 이걸 어떻게 해야할까?
             callback(0)
             return
         }
@@ -135,7 +116,6 @@ class TeamRepository {
             val teamName = dataSnapshot.value as String?
             val teamRef = mDbref.child("USER").child(mAuth.currentUser?.uid!!).child(teamCode)
 
-            // 팀 네임 , 팀 코드 DB에 저장
             teamRef.setValue( Team( teamName,teamCode) )
         }
             override fun onCancelled(databaseError: DatabaseError) {
@@ -143,11 +123,8 @@ class TeamRepository {
         })
     }
 
-    // 이름 수정
-    // 널 체크 왜? ReNameFrag에서 TeamApdater의 agrument로 teamcode가져오는데 이게 널일 수도 있으니까 string? 으로 받고 널체크
     fun reName( teamCode : String?, rename : String ){
         if (teamCode != null) {
-            // 널 체크
             val uid = mAuth.currentUser?.uid!!
             mDbref.child("USER").child(uid).child(teamCode).child("teamName").setValue(rename)
             mDbref.child("Team").child(teamCode).child("TeamName").setValue(rename)
