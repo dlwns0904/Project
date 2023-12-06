@@ -47,7 +47,9 @@ class TeamMenuActivity : AppCompatActivity() {
         }
         // 파일 눌렀을 때
         binding.btnFile.setOnClickListener {
-            val intent: Intent = Intent(this@TeamMenuActivity,FileActivity::class.java)
+            val intent: Intent = Intent(this,FileActivity::class.java)
+            intent.putExtra("TeamName", teamName)
+            intent.putExtra("TeamCode", teamCode)
             startActivity(intent)
         }
 

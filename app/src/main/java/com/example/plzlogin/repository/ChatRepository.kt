@@ -10,8 +10,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
-class MessageRepository {
+class ChatRepository { // 리포지토리는 어떤 db를 쓰는지를, ex)firebase, 파라미터를 뷰모델로 넘겨줘야, 파이어베이스에 만들라고 얘기만, addValueEventListener아니고 늘 listener, valuechangelistener
 
+// 뷰모델에서 라이브 데이터를 파라미터로 넘겨줌, 파이어베이스가 수정되면 뷰모델, 레포지토리에 알려줌, 뷰모델이 레포지토리에 넘겨준 파라미터 읽음, 뷰가 뷰모델 옵저브 // 화면 체인지 잘 되기위해
     private val mAuth: FirebaseAuth = Firebase.auth
     private val mDbref: DatabaseReference = Firebase.database.reference
 

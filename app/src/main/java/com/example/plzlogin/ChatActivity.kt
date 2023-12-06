@@ -2,25 +2,19 @@ package com.example.plzlogin
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.plzlogin.databinding.ActivityChatBinding
-import com.example.plzlogin.viewmodel.MessageViewModel
+import com.example.plzlogin.viewmodel.ChatViewModel
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -30,11 +24,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.TimeZone
 
 class ChatActivity : AppCompatActivity() {
 
@@ -43,18 +32,12 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDbref: DatabaseReference
     private lateinit var navView: NavigationView
-    private lateinit var senderUid: String // 고민
     private lateinit var receiverUid: String
-    private lateinit var currentRoom: String // 보낸 대화방
-    private lateinit var receiverRoom: String // 받는 대화방
     private var currentUserName: String = ""
-    private var searchKeyword: String = ""
     private lateinit var messageAdapter: MessageAdapter
-    private lateinit var recyclerView: RecyclerView
 
 
-    private val viewModel: MessageViewModel by viewModels()
-
+    private val viewModel: ChatViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +47,6 @@ class ChatActivity : AppCompatActivity() {
 
 
         // 이전 화면에서 가져오기
-        val intent = intent
         val teamName = intent.getStringExtra("TeamName")
         val teamCode = intent.getStringExtra("TeamCode").toString()
         val userList = mutableListOf<String>()
@@ -87,8 +69,6 @@ class ChatActivity : AppCompatActivity() {
             }
         }
 
-
-
         val toolbar = binding.includeToolbar.toolbar
         val btnMenu = binding.includeToolbar.btnMenu
         drawerLayout = binding.drawerLayout
@@ -97,8 +77,6 @@ class ChatActivity : AppCompatActivity() {
 
         val menu: Menu = navView.menu
         val Users = menu.findItem(R.id.subtitle)?.subMenu
-        // Log.d("slsls", "group2: $group2")
-        // subtitle에 해당하는 SubMenu를 찾음
 
 
         val headerView = navView.getHeaderView(0)
@@ -127,7 +105,6 @@ class ChatActivity : AppCompatActivity() {
                     // 실패 처리
                 }
             })
-
 
         // 드로어에 채팅방 참여자 리스트
         val teamRef = mDbref.child("Team").child(teamCode)
@@ -166,6 +143,7 @@ class ChatActivity : AppCompatActivity() {
 
             }
         })
+
 
 
         // 메시지 전송 버튼 설정
