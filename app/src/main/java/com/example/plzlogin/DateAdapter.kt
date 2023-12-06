@@ -126,6 +126,7 @@ class DateAdapter(private var dates: List<Date>): RecyclerView.Adapter<DateAdapt
         }
     }
     fun setDate(newDates: List<Date>) {
+
         dates = newDates
         notifyDataSetChanged()
 

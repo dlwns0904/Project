@@ -20,7 +20,7 @@ class TeamMenuRepository {
     fun loadDates(teamCode: String, date: String, callback: (List<Date>) -> Unit) {
         val dateRef = mDbref.child("Date").child(teamCode).child(date)
 
-        dateRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        dateRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val dates = mutableListOf<Date>()
 
@@ -39,8 +39,9 @@ class TeamMenuRepository {
                                         time?.let { times.add(it) }
                                     }
 
-                                    val date = Date(name = name, times = times)
-                                    dates.add(date)
+                                    val add_date = Date(name = name, times = times)
+
+                                    dates.add(add_date)
 
                                     callback(dates)
                                 }

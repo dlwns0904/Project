@@ -14,6 +14,7 @@ class TeamMenuViewModel : ViewModel(){
 
     fun loadDates(teamCode: String, date: String) {
         teamMenuRepository.loadDates(teamCode, date) {datesList ->
+            _dates.value = emptyList()
             _dates.value = datesList
         }
     }
